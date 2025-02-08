@@ -72,16 +72,14 @@
         }
 
         .input-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 10px;
-            background: white;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            padding: 10px;
+            gap: 10px;  /* 간격 추가 */
+            align-items: center;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            position: sticky;
+            bottom: 0;
         }
 
         .code-container {
@@ -96,23 +94,18 @@
         }
 
         .message-input {
-            background-color: #F0F0F0;  /* 옅은 회색 */
-            border: none;
-            padding: 12px;
-            border-radius: 20px;
-            margin: 8px;
             flex-grow: 1;
+            margin-right: 15px;  /* 오른쪽 여백 증가 */
         }
 
-        button {
-            padding: 12px 20px;
-            background-color: #007bff;
+        .send-button, .confirm-button {
+            margin-right: 10px;  /* 오른쪽 여백 추가 */
+            min-width: 60px;     /* 버튼 최소 너비 설정 */
+            background-color: #007bff;  /* 파란색 */
             color: white;
             border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
+            border-radius: 5px;
+            padding: 8px 15px;
         }
 
         button:active {
@@ -181,9 +174,8 @@
 
     <script>
         window.onload = function() {
-            // 초기 메시지 표시
-            const initialMessage = `👋 안녕하세요!
-강의하는 아이들 수학학원 수지신봉캠퍼스입니다.
+            // 수정된 초기 메시지
+            const initialMessage = `👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.
 학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.
 
 개인코드번호를 입력해 주세요.`;
