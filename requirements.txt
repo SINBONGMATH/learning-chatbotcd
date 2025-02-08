@@ -4,3 +4,4 @@ python-dotenv
 anthropic
 pyairtable
 airtable-python-wrapper
+jinja2
