@@ -16,8 +16,8 @@
             position: fixed;
             top: 12px;
             right: 12px;
-            width: 3px;
-            height: 3px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             overflow: hidden;
             background: white;
@@ -59,10 +59,12 @@
         }
 
         .user-message {
-            background-color: #007bff;
+            background-color: #7CB9E8;
             color: white;
             margin-left: auto;
             border-radius: 15px 15px 0 15px;
+            padding: 12px;
+            max-width: 80%;
         }
 
         .bot-message {
@@ -140,6 +142,17 @@
                 font-size: 16px;
             }
         }
+
+        .bot-message-with-logo {
+            background-color: #f8f9fa;
+            color: black;
+            margin-right: auto;
+            border-radius: 15px 15px 15px 0;
+            padding: 12px;
+            font-size: 14px;
+            max-width: calc(100% - 40px);
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -202,14 +215,20 @@
             try {
                 // 서버에 메시지 전송
                 const response = await fetch(`/student/${code}?message=${encodeURIComponent(message)}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 const data = await response.json();
                 
                 // 봇 응답 표시
                 if (data.response) {
                     addMessage(data.response, false);
+                } else {
+                    addMessage('응답을 받지 못했습니다.', false);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                addMessage('죄송합니다. 오류가 발생했습니다.', false);
             }
         }
 
