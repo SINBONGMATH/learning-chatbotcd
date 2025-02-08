@@ -1,49 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>학습 상담 챗봇</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 상담</title>
     <style>
-        #chat-container {
-            width: 400px;
-            height: 500px;
-            border: 1px solid #ccc;
-            overflow-y: auto;
-            padding: 20px;
-            margin: 20px auto;
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
+
+        .chat-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .message {
             margin: 10px 0;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
         }
+
         .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            border-radius: 15px 15px 0 15px;
         }
+
         .bot-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
+            background-color: #e9ecef;
+            color: black;
+            margin-right: auto;
+            border-radius: 15px 15px 15px 0;
         }
-        #input-container {
-            width: 400px;
-            margin: 20px auto;
-            display: flex;
-        }
-        #user-input {
-            flex-grow: 1;
+
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             padding: 10px;
-            margin-right: 10px;
+            background: white;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        #codeInput {
+            flex: 0 0 120px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:active {
+            background-color: #0056b3;
+        }
+
+        /* 링크 스타일 */
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        /* 이모지 크기 최적화 */
+        .message img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
+        }
+
+        /* 입력창 포커스 시 줌 방지 */
+        @media screen and (max-width: 768px) {
+            input, button {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div>
-        <input type="text" id="phone-input" placeholder="전화번호를 입력하세요">
-        <button onclick="setPhoneNumber()">학생 설정</button>
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+            <!-- 초기 로고와 환영 메시지 -->
+            <div class="logo-message">
+                <div class="logo-container">
+                    <img src="/static/logo.png" alt="학원 로고">
+                </div>
+                <div class="bot-message-with-logo">
+                    안녕하세요. 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.
+                    개인코드번호를 입력해 주세요.
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="chat-container"></div>
-    <div id="input-container">
-        <input type="text" id="user-input" placeholder="메시지를 입력하세요...">
+    <div class="input-container">
+        <input type="text" id="codeInput" placeholder="개인코드번호">
+        <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
         <button onclick="sendMessage()">전송</button>
     </div>
 
@@ -89,13 +177,30 @@
             }
         }
 
-        function addMessage(message, sender) {
-            const container = document.getElementById('chat-container');
+        function addMessage(message, isUser) {
+            const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
-            messageDiv.textContent = message;
-            container.appendChild(messageDiv);
-            container.scrollTop = container.scrollHeight;
+            
+            if (isUser) {
+                messageDiv.className = 'message user-message';
+                messageDiv.textContent = message;
+            } else {
+                // 봇 메시지에 로고 추가
+                const logoMessage = document.createElement('div');
+                logoMessage.className = 'logo-message';
+                logoMessage.innerHTML = `
+                    <div class="logo-container">
+                        <img src="/static/logo.png" alt="학원 로고">
+                    </div>
+                    <div class="bot-message-with-logo">${message}</div>
+                `;
+                chatMessages.appendChild(logoMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // Enter 키로 메시지 전송
