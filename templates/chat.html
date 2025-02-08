@@ -16,8 +16,8 @@
             position: fixed;
             top: 12px;
             right: 12px;
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             overflow: hidden;
             background: white;
@@ -38,7 +38,7 @@
             height: calc(100vh - 120px);
             display: flex;
             flex-direction: column;
-            background-color: white;
+            background-color: #E8F0FE;  /* 옅은 파랑색 배경 */
             border-radius: 10px;
             position: relative; /* 위치 기준점 설정 */
         }
@@ -51,20 +51,17 @@
         }
 
         .message {
-            margin: 10px 0;
+            max-width: 70%;
+            margin: 8px;
             padding: 12px;
-            border-radius: 15px;
-            max-width: 80%;
+            border-radius: 20px;
             word-wrap: break-word;
         }
 
         .user-message {
-            background-color: #7CB9E8;
-            color: white;
+            background-color: #FFE94A;  /* 노란색 */
             margin-left: auto;
-            border-radius: 15px 15px 0 15px;
-            padding: 12px;
-            max-width: 80%;
+            border-top-right-radius: 4px;
         }
 
         .bot-message {
@@ -98,13 +95,13 @@
             display: none;
         }
 
-        input {
-            flex-grow: 1;
+        .message-input {
+            background-color: #F0F0F0;  /* 옅은 회색 */
+            border: none;
             padding: 12px;
-            border: 1px solid #ddd;
             border-radius: 20px;
-            font-size: 16px;
-            margin: 0;
+            margin: 8px;
+            flex-grow: 1;
         }
 
         button {
@@ -144,14 +141,11 @@
         }
 
         .bot-message-with-logo {
-            background-color: #f8f9fa;
-            color: black;
-            margin-right: auto;
-            border-radius: 15px 15px 15px 0;
+            background-color: #FFFFFF;  /* 흰색 */
             padding: 12px;
-            font-size: 14px;
-            max-width: calc(100% - 40px);
-            line-height: 1.4;
+            border-radius: 20px;
+            border-top-left-radius: 4px;
+            margin-right: auto;
         }
     </style>
 </head>
@@ -279,4 +273,5 @@
     </script>
 </body>
 </html>
+
 
