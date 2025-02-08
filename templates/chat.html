@@ -58,9 +58,9 @@
 
         .user-message {
             background-color: #FFE94A;
-            margin: 60px 0 60px auto !important;  /* 간격 3배 증가 */
-            padding: 20px 25px;
-            border-radius: 18px;
+            margin: 30px 0 30px auto !important;
+            padding: 25px 35px;  /* 내부 여백 증가 */
+            border-radius: 25px;  /* 더 둥글게 */
             font-size: 17px;
             line-height: 1.8;
             letter-spacing: 0.5px;
@@ -166,14 +166,14 @@
 
         .bot-message-with-logo {
             background-color: #FFFFFF !important;
-            padding: 42px 48px !important;
-            margin: 60px 0 !important;  /* 간격 3배 증가 */
+            padding: 25px 35px !important;  /* 내부 여백 증가 */
+            margin: 30px 0 !important;
             line-height: 1.8;
             display: inline-block;
             max-width: 85%;
             font-size: 17px;
             letter-spacing: 0.5px;
-            border-radius: 18px;
+            border-radius: 25px !important;  /* 더 둥글게 */
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             vertical-align: top;
             width: fit-content;
@@ -319,6 +319,15 @@
 
         .save-chat-btn:hover {
             background-color: #0056b3;  /* 호버 효과 */
+        }
+
+        /* 연속된 메시지일 때 간격 더 벌리기 */
+        .bot-message-with-logo + .bot-message-with-logo {
+            margin-top: 45px !important;  /* 연속된 메시지 간격 증가 */
+        }
+
+        .user-message + .user-message {
+            margin-top: 45px !important;  /* 연속된 메시지 간격 증가 */
         }
     </style>
 </head>
