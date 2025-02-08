@@ -74,7 +74,6 @@
         .input-container {
             display: flex;
             padding: 10px;
-            gap: 10px;  /* 간격 추가 */
             align-items: center;
             background-color: white;
             border-top: 1px solid #e0e0e0;
@@ -95,13 +94,12 @@
 
         .message-input {
             flex-grow: 1;
-            margin-right: 15px;  /* 오른쪽 여백 증가 */
+            margin-right: 12px;  /* 버튼과의 간격만 살짝 조정 */
         }
 
         .send-button, .confirm-button {
-            margin-right: 10px;  /* 오른쪽 여백 추가 */
-            min-width: 60px;     /* 버튼 최소 너비 설정 */
-            background-color: #007bff;  /* 파란색 */
+            margin-right: 12px;  /* 버튼 오른쪽 여백만 살짝 추가 */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
@@ -151,12 +149,7 @@
         <div class="chat-messages" id="chatMessages">
             <div class="logo-message">
                 <div class="bot-message-with-logo">
-                    👋 안녕하세요!<br>
-                    강의하는 아이들 수학학원 수지신봉캠퍼스의<br>
-                    🤖 AI 학습컨설팅 상담가입니다.<br><br>
-                    학생들의 학습기록 데이터를 바탕으로<br>
-                    ✨ 맞춤형 상담을 도와드리겠습니다.<br><br>
-                    개인코드번호를 입력해 주세요.
+                    
                 </div>
             </div>
         </div>
@@ -174,11 +167,7 @@
 
     <script>
         window.onload = function() {
-            // 수정된 초기 메시지
-            const initialMessage = `👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.
-학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.
-
-개인코드번호를 입력해 주세요.`;
+            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다. 학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
             
             addMessage(initialMessage, false);
         }
@@ -282,3 +271,4 @@
     </script>
 </body>
 </html>
+
