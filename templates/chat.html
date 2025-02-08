@@ -180,12 +180,29 @@
     </div>
 
     <script>
+        window.onload = function() {
+            // 초기 메시지 표시
+            const initialMessage = `👋 안녕하세요!
+강의하는 아이들 수학학원 수지신봉캠퍼스입니다.
+학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.
+
+개인코드번호를 입력해 주세요.`;
+            
+            addMessage(initialMessage, false);
+        }
+
+        // 코드 확인 후 메시지
+        function showCodeConfirmation() {
+            const confirmMessage = "📌 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
+            addMessage(confirmMessage, false);
+        }
+
         function verifyCode() {
             const code = document.getElementById('codeInput').value;
             if (code.trim() !== '') {
                 document.getElementById('messageContainer').style.display = 'flex';
                 document.querySelector('.code-container').style.display = 'none';
-                addMessage('개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.', false);
+                showCodeConfirmation();
             } else {
                 alert('개인코드번호를 입력해주세요');
             }
@@ -273,5 +290,3 @@
     </script>
 </body>
 </html>
-
-
