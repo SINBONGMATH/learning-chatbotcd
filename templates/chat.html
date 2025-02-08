@@ -79,6 +79,7 @@
             border-top: 1px solid #e0e0e0;
             position: sticky;
             bottom: 0;
+            margin-top: 20px;
         }
 
         .code-container {
@@ -94,7 +95,10 @@
 
         .message-input {
             flex-grow: 1;
-            margin-right: 15px;  /* 입력창과 버튼 사이 간격만 살짝 증가 */
+            margin-right: 25px;
+            padding: 12px;  /* 내부 여백 증가 */
+            height: 45px;   /* 높이 20% 증가 */
+            font-size: 16px;  /* 글자 크기 조정 */
         }
 
         .send-button {
@@ -103,7 +107,9 @@
             border: none;
             border-radius: 5px;
             padding: 8px 15px;
-            margin-right: 5px;  /* 버튼 오른쪽 여백 추가 */
+            margin-right: 25px;
+            width: 60px;
+            height: 45px;  /* 버튼 높이도 입력창과 맞춤 */
         }
 
         button:active {
@@ -146,12 +152,8 @@
     </div>
 
     <div class="chat-container">
-        <div class="chat-messages" id="chatMessages">
-            <div class="logo-message">
-                <div class="bot-message-with-logo">
-                    
-                </div>
-            </div>
+        <div class="messages" id="messages">
+            <!-- 여기에 불필요한 빈 줄이나 공백이 있을 수 있습니다 -->
         </div>
     </div>
     <div class="input-container">
@@ -271,5 +273,3 @@
     </script>
 </body>
 </html>
-
-
