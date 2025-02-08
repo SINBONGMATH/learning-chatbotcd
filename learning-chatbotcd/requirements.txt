@@ -1,5 +1,0 @@
-fastapi
-uvicorn
-python-dotenv
-anthropic
-airtable-python-wrapper
