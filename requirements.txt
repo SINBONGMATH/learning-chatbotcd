@@ -2,4 +2,5 @@ fastapi
 uvicorn
 python-dotenv
 anthropic
+pyairtable
 airtable-python-wrapper
