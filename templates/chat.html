@@ -214,28 +214,27 @@
 
             try {
                 // 서버에 메시지 전송
-                const response = await fetch(`/student/${code}?message=${encodeURIComponent(message)}`);
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: code,
+                        message: message
+                    })
+                });
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+
                 const data = await response.json();
                 
-                // 전체 응답 데이터 확인
-                console.log('전체 서버 응답:', data);
-                
-                // 응답 데이터 구조 확인
-                if (data) {
-                    console.log('응답 타입:', typeof data);
-                    console.log('응답 키들:', Object.keys(data));
-                }
-                
-                // 봇 응답 표시 (response 또는 message 필드 확인)
-                if (data && (data.response || data.message || data.prompt)) {
-                    const botMessage = data.response || data.message || data.prompt;
-                    console.log('표시할 메시지:', botMessage);
-                    addMessage(botMessage, false);
+                // 봇 응답 표시
+                if (data && data.response) {
+                    addMessage(data.response, false);
                 } else {
-                    console.log('응답 데이터 없음:', data);
                     addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
                 }
             } catch (error) {
@@ -280,3 +279,4 @@
     </script>
 </body>
 </html>
+
