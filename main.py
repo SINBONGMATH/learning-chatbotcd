@@ -35,8 +35,8 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
-async def root():
-    return {"message": "학습 현황 확인 챗봇입니다. /student/{phone} 로 접속해주세요."}
+def read_root(request: Request):
+    return templates.TemplateResponse("chat.html", {"request": request})
 
 @app.get("/student/{phone}")
 async def get_student_status(phone: str):
