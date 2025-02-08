@@ -259,10 +259,31 @@ async def chat_endpoint(request: Request):
         # 진행률 바 생성 함수
         def create_progress_bar(progress, length=10):
             try:
-                progress_float = float(progress)
+                # 문자열을 실수로 변환
+                if isinstance(progress, str):
+                    # '%' 문자 제거 후 변환
+                    progress = progress.replace('%', '')
+                    progress_float = float(progress) / 100
+                else:
+                    progress_float = float(progress)
+                
+                # 0~1 범위로 정규화
+                progress_float = min(max(progress_float, 0), 1)
+                
+                # 퍼센트로 변환 (소수점 1자리까지)
+                percent = progress_float * 100
                 filled = int(progress_float * length)
                 empty = length - filled
-                return f"{'🟩' * filled}{'⬜️' * empty} {progress_float*100:.1f}%"
+                
+                # 진행률이 1% 미만일 경우
+                if percent < 1 and percent > 0:
+                    return f"{'🟩'} 시작 단계"
+                # 진행률이 100%일 경우
+                elif percent >= 100:
+                    return f"{'🟩' * length} 완료"
+                # 그 외의 경우
+                else:
+                    return f"{'🟩' * filled}{'⬜️' * empty} {percent:.1f}%"
             except:
                 return "진행률 정보 없음"
 
@@ -278,20 +299,22 @@ async def chat_endpoint(request: Request):
             note = current_book.get('남길말', '')
             note_info = f"\n- 특이사항: {note}" if note else ""
 
+            # D-day 정보 추가
+            d_day = current_book.get('마감날D-day', '')
             deadline = current_book.get('교재 마감날짜', '정보 없음')
+            
             deadline_status = ""
-            try:
-                if deadline != '정보 없음':
-                    deadline_date = datetime.strptime(deadline, '%Y-%m-%d').date()
-                    days_remaining = (deadline_date - today).days
-                    if days_remaining > 0:
-                        deadline_status = f"(마감까지 {days_remaining}일 남음)"
-                    elif days_remaining == 0:
+            if d_day != '':
+                try:
+                    d_day = int(d_day)
+                    if d_day > 0:
+                        deadline_status = f"(마감까지 {d_day}일 남음)"
+                    elif d_day == 0:
                         deadline_status = "(오늘이 마감일)"
                     else:
-                        deadline_status = f"(마감일로부터 {abs(days_remaining)}일 지남)"
-            except:
-                pass
+                        deadline_status = f"(마감일로부터 {abs(d_day)}일 지남)"
+                except:
+                    pass
 
             prompt += f"""
 📚 현재 학습 중인 교재:
@@ -335,7 +358,8 @@ async def chat_endpoint(request: Request):
    📚 가우스 (표준진도 교재):
    - 초등: 학기당 3권씩 구성 (예: 가우스 초3-1 (1)권, (2)권, (3)권)
    - 중등: 학기당 2권씩 구성 (예: 가우스 중1-1 (1)권, (2)권)
-   - 학습 기간: N주 완성 = N x 7일로 계산
+   - 학습 기간: 각 교재별로 N주 완성 = N x 7일로 계산
+   - 중요: 각 교재의 학습 기간은 개별적으로 안내 (예: "중2-1 (1)권은 5주, (2)권도 5주 완성으로 진행 중입니다.")
 
    📚 다빈치 (응용문제집):
    - 학기당 1권 구성 (예: 다빈치 초3-1)
@@ -349,8 +373,16 @@ async def chat_endpoint(request: Request):
 4. 현재 날짜를 기준으로 학습 진행 상황과 마감일을 분석하여 실질적인 조언을 제공
    - '남길말' 필드에 내용이 있는 경우, 이를 바탕으로 상담 진행
    - '남길말' 필드가 비어있는 경우, 해당 내용은 언급하지 않음
+   - 각 교재의 진행 상황은 반드시 개별적으로 안내
+   - '마감날D-day' 필드를 활용하여 정확한 남은 기간 안내:
+     * 양수: "마감까지 N일 남았습니다"
+     * 0: "오늘이 마감일입니다"
+     * 음수: "마감일로부터 N일 지났습니다"
 
-5. 이전 교재들의 학습 이력을 간단히 요약하여 전체적인 학습 흐름을 보여주기
+5. 이전 교재들의 학습 이력 설명:
+   - 완료된 교재는 확정적 표현 사용 (예: "익혔습니다", "학습했습니다", "완료했습니다")
+   - 추측성 표현 사용 금지 (예: "익혔겠죠", "했을 거예요" 등은 사용하지 않음)
+   - 구체적 기간과 함께 명확한 성과 언급 (예: "2024년 12월 20일부터 2025년 1월 20일까지 가우스 중2-1 (1)권을 통해 중2 수준의 기본 개념과 문제 유형을 익혔습니다.")
 
 6. 계획대로 학습이 진행되기 위해서는 다음 사항들이 매우 중요함을 강조:
    ✅ 숙제를 성실히 해오기
@@ -380,4 +412,3 @@ async def chat_endpoint(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
