@@ -273,6 +273,10 @@ async def chat_endpoint(request: Request):
         if current_book:
             progress = current_book.get('현재 교재 진행상황', '0')
             progress_bar = create_progress_bar(progress)
+            
+            # 남길말 정보 추가
+            note = current_book.get('남길말', '')
+            note_info = f"\n- 특이사항: {note}" if note else ""
 
             deadline = current_book.get('교재 마감날짜', '정보 없음')
             deadline_status = ""
@@ -296,7 +300,7 @@ async def chat_endpoint(request: Request):
 - 시작일: {current_book.get('교재 받은날짜', '정보 없음')}
 - 목표 마감일: {deadline} {deadline_status}
 - 진행 페이스: {current_book.get('진행속도 페이스MAKER', '정보 없음')}
-- 담당 선생님: {current_book.get('담임선생님', '정보 없음')}
+- 담당 선생님: {current_book.get('담임선생님', '정보 없음')}{note_info}
 """
 
         # 이전 교재 정보 추가
@@ -327,11 +331,24 @@ async def chat_endpoint(request: Request):
    - 마지막 글자에 받침이 있으면 '이가' 붙이기 (예: '혜솔' -> '혜솔이가')
    - 마지막 글자에 받침이 없으면 '가' 붙이기 (예: '민아' -> '민아가')
 
-3. 교재명 표기 규칙:
-   - 교재명은 정확히 표기 (예: '공통수학1 1권', '수학의 샘 3권' 등)
-   - 교재명에 권수가 포함된 경우 그대로 사용
+3. 교재 시스템 이해:
+   📚 가우스 (표준진도 교재):
+   - 초등: 학기당 3권씩 구성 (예: 가우스 초3-1 (1)권, (2)권, (3)권)
+   - 중등: 학기당 2권씩 구성 (예: 가우스 중1-1 (1)권, (2)권)
+   - 학습 기간: N주 완성 = N x 7일로 계산
+
+   📚 다빈치 (응용문제집):
+   - 학기당 1권 구성 (예: 다빈치 초3-1)
+
+   📚 오일러 (심화교재):
+   - 학기당 1권 구성 (예: 오일러 초3-1)
+
+   📚 파스칼 (심화교재):
+   - 학기당 1권 구성 (예: 파스칼 중1-1)
 
 4. 현재 날짜를 기준으로 학습 진행 상황과 마감일을 분석하여 실질적인 조언을 제공
+   - '남길말' 필드에 내용이 있는 경우, 이를 바탕으로 상담 진행
+   - '남길말' 필드가 비어있는 경우, 해당 내용은 언급하지 않음
 
 5. 이전 교재들의 학습 이력을 간단히 요약하여 전체적인 학습 흐름을 보여주기
 
@@ -363,3 +380,4 @@ async def chat_endpoint(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
