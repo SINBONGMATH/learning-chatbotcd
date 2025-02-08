@@ -34,11 +34,11 @@
         .chat-container {
             max-width: 100%;
             margin: 0 auto;
-            padding: 10px 15px;  /* 좌우 여백 일관성 */
-            height: calc(100vh - 90px);  /* 높이 살짝 조정 */
+            padding: 10px 15px;
+            height: calc(100vh - 90px);
             display: flex;
             flex-direction: column;
-            background-color: white;
+            background-color: #F0F7FF;  /* 더 연한 파스텔 파랑색으로 수정 */
             border-radius: 10px;
             position: relative;
         }
@@ -51,20 +51,20 @@
         }
 
         .message {
-            margin: 15px 0;  /* 메시지 간격 증가 */
-            padding: 12px 15px;  /* 좌우 패딩 증가 */
-            border-radius: 15px;
-            max-width: 80%;
-            word-wrap: break-word;
+            margin: 4px 0;  /* 메시지 간격 조정 */
+            padding: 0;  /* 패딩 제거 */
+            line-height: normal;  /* 기본 줄간격으로 설정 */
         }
 
         .user-message {
-            background-color: #FFE94A;  /* 노란색 */
+            background-color: #FFE94A;  /* 밝은 노란색 */
             margin-left: auto;
             border-top-right-radius: 4px;
+            border-radius: 15px;
             animation: fadeIn 0.3s ease-in-out;
             font-size: 15px;
             max-width: 85%;
+            padding: 15px;
         }
 
         .bot-message {
@@ -162,13 +162,31 @@
         }
 
         .bot-message-with-logo {
-            background-color: #f8f9fa;
-            padding: 15px;  /* 패딩 약간 증가 */
-            line-height: 1.6;  /* 줄간격 살짝 증가 */
-            margin: 12px 0;  /* 메시지 간 간격 조정 */
-            animation: fadeIn 0.3s ease-in-out;
+            background-color: #FFFFFF;
+            padding: 8px 12px;
+            margin: 0;  /* 마진 제거 */
+            line-height: 1.4;
+            display: inline-block;
             max-width: 85%;
             font-size: 15px;
+            border-radius: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            vertical-align: top;  /* 상단 정렬 추가 */
+        }
+
+        .logo-message {
+            margin: 0;  /* 마진 제거 */
+            padding: 0;  /* 패딩 제거 */
+            line-height: normal;  /* 기본 줄간격으로 설정 */
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #888;
+            margin: 2px 0 0 0;  /* 위쪽 마진만 설정 */
+            padding: 0;  /* 패딩 제거 */
+            line-height: 1;  /* 줄간격 최소화 */
+            display: block;  /* 블록 레벨로 변경 */
         }
 
         .chat-messages::-webkit-scrollbar {
@@ -264,14 +282,6 @@
             border-bottom: 1px solid #eee;
         }
 
-        /* 메시지에 시간 표시 */
-        .message-time {
-            font-size: 11px;
-            color: #888;
-            margin-top: 5px;
-            text-align: right;
-        }
-
         /* 긴 메시지 더보기/접기 */
         .long-message {
             max-height: 300px;
@@ -333,7 +343,7 @@
     <script>
         // 초기 메시지
         window.onload = function() {
-            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.<br><br>학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.<br><br>개인코드번호를 입력해 주세요.";
+            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.\n\n학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
             addMessage(initialMessage, false);
         }
 
@@ -344,14 +354,37 @@
             if (isUser) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message user-message';
-                messageDiv.textContent = message;
+                // 줄바꿈을 <br>로 변환
+                messageDiv.innerHTML = message.replace(/\n/g, '<br>');
+                
+                // 시간 추가
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                messageDiv.appendChild(timeDiv);
+                
                 chatMessages.appendChild(messageDiv);
             } else {
                 const logoMessage = document.createElement('div');
                 logoMessage.className = 'logo-message';
-                logoMessage.innerHTML = `
-                    <div class="bot-message-with-logo">${message}</div>
-                `;
+                const botMessage = document.createElement('div');
+                botMessage.className = 'bot-message-with-logo';
+                // 줄바꿈을 <br>로 변환
+                botMessage.innerHTML = message.replace(/\n/g, '<br>');
+                
+                // 시간 추가
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                botMessage.appendChild(timeDiv);
+                
+                logoMessage.appendChild(botMessage);
                 chatMessages.appendChild(logoMessage);
             }
             
@@ -360,7 +393,7 @@
 
         // 코드 확인 후 메시지
         function showCodeConfirmation() {
-            const confirmMessage = "📌 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
+            const confirmMessage = "�� 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
             addMessage(confirmMessage, false);
         }
 
