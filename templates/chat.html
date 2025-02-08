@@ -79,7 +79,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 12px 15px;  /* 패딩 일관성 */
+            padding: 12px 15px;  /* 기본 패딩 */
             background: white;
             display: flex;
             align-items: center;
@@ -116,7 +116,10 @@
         }
 
         button {
-            padding: 0 20px;  /* 패딩 단순화 */
+            padding: 0 20px;
+            height: 45px;
+            width: 80px;  /* 버튼 너비 고정 */
+            margin-right: 35px;  /* 오른쪽 여백 증가해서 왼쪽으로 이동 */
             background-color: #007bff;
             color: white;
             border: none;
@@ -124,12 +127,9 @@
             cursor: pointer;
             font-size: 16px;
             white-space: nowrap;
-            width: 80px;
-            height: 45px;    /* 높이 살짝 조정 */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
             transition: background-color 0.2s;  /* 부드러운 효과 */
         }
 
@@ -140,6 +140,11 @@
         button:active {
             transform: scale(0.98);  /* 클릭 시 살짝 눌리는 효과 */
             background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
 
         /* 링크 스타일 */
@@ -192,8 +197,7 @@
         }
 
         .message-container, .code-container {
-            transition: all 0.3s ease;
-            opacity: 1;
+            padding-right: 15px;  /* 컨테이너 오른쪽 여백 추가 */
         }
 
         .message-container.hidden, .code-container.hidden {
@@ -210,6 +214,104 @@
                 transform: translateY(0);
             }
         }
+
+        .typing-indicator {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            margin: 10px 0;
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* 새 메시지 도착 시 깜빡임 효과 */
+        @keyframes newMessage {
+            0% { background-color: rgba(0, 123, 255, 0.1); }
+            100% { background-color: transparent; }
+        }
+
+        .new-message {
+            animation: newMessage 1s ease-out;
+        }
+
+        /* 메시지 입력창 포커스 효과 개선 */
+        .input-focus-effect {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .input-focus-effect input:focus::placeholder {
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+        /* 메시지 전송 버튼 누를 때 효과 */
+        button:active:not(:disabled) {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+
+        /* 에러 메시지 스타일 */
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: rgba(220, 53, 69, 0.1);
+            margin: 10px 0;
+        }
+
+        /* 채팅창 상단에 시간 표시 */
+        .chat-header {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 메시지에 시간 표시 */
+        .message-time {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* 긴 메시지 더보기/접기 */
+        .long-message {
+            max-height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .message-expand {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* 저장 버튼 스타일 */
+        .save-chat-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 1000;
+            transition: background-color 0.2s;
+        }
+
+        .save-chat-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -219,13 +321,7 @@
 
     <div class="chat-container">
         <div class="chat-messages" id="chatMessages">
-            <div class="logo-message">
-                <div class="bot-message-with-logo">
-                    👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.<br><br>
-                    학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.<br><br>
-                    개인코드번호를 입력해 주세요.
-                </div>
-            </div>
+            <!-- 하드코딩된 초기 메시지 제거 -->
         </div>
     </div>
     <div class="input-container">
@@ -239,11 +335,18 @@
         </div>
     </div>
 
+    <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
+
     <script>
         window.onload = function() {
             const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다. 학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
             
             addMessage(initialMessage, false);
+
+            const savedChat = localStorage.getItem('chatHistory');
+            if (savedChat) {
+                chatHistory = JSON.parse(savedChat);
+            }
         }
 
         // 코드 확인 후 메시지
@@ -263,22 +366,31 @@
             }
         }
 
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.textContent = '답변을 작성중입니다...';
+            document.getElementById('chatMessages').appendChild(typingDiv);
+        }
+
         async function sendMessage() {
-            const codeInput = document.getElementById('codeInput');
-            const messageInput = document.getElementById('messageInput');
-            const code = codeInput.value;
-            const message = messageInput.value;
-
-            if (!message) {
-                alert('메시지를 입력해주세요');
-                return;
-            }
-
-            // 사용자 메시지 표시
-            addMessage(message, true);
-            messageInput.value = '';
-
+            const button = document.querySelector('.message-container button');
+            button.disabled = true;
             try {
+                const codeInput = document.getElementById('codeInput');
+                const messageInput = document.getElementById('messageInput');
+                const code = codeInput.value;
+                const message = messageInput.value;
+
+                if (!message) {
+                    alert('메시지를 입력해주세요');
+                    return;
+                }
+
+                // 사용자 메시지 표시
+                addMessage(message, true);
+                messageInput.value = '';
+
                 // 서버에 메시지 전송
                 const response = await fetch('/chat', {
                     method: 'POST',
@@ -287,7 +399,8 @@
                     },
                     body: JSON.stringify({
                         phone: code,
-                        message: message
+                        message: message,
+                        saveChat: true  // 채팅 저장 플래그 추가
                     })
                 });
 
@@ -297,16 +410,76 @@
 
                 const data = await response.json();
                 
-                // 봇 응답 표시
+                // 봇 응답을 4문장씩 나누어 표시 (2초 딜레이)
                 if (data && data.response) {
-                    addMessage(data.response, false);
+                    const sentences = data.response.split(/(?<=[.!?])\s+/);
+                    for (let i = 0; i < sentences.length; i += 4) {
+                        const chunk = sentences.slice(i, i + 4).join(' ');
+                        if (chunk.trim()) {
+                            setTimeout(() => {
+                                addMessage(chunk, false);
+                            }, i * 2000);
+                        }
+                    }
+
+                    // 대화 종료 시 이메일 전송
+                    if (data.response.includes('상담을 종료') || data.response.includes('감사합니다')) {
+                        sendChatHistory(code);
+                    }
                 } else {
                     addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
                 }
             } catch (error) {
                 console.error('Error:', error);
                 addMessage('죄송합니다. 오류가 발생했습니다.', false);
+            } finally {
+                button.disabled = false;
+                document.querySelector('.typing-indicator').remove();
             }
+        }
+
+        // 채팅 내용 이메일 전송 함수
+        async function sendChatHistory(studentCode) {
+            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
+            let chatContent = `=== 상담 내용 (학생 코드: ${studentCode}) ===\n\n`;
+            
+            messages.forEach(msg => {
+                const time = msg.querySelector('.message-time')?.textContent || '';
+                const content = msg.textContent.replace(time, '').trim();
+                const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
+                
+                chatContent += `${type} ${content}\n`;
+                if (time) chatContent += `(${time})\n`;
+                chatContent += "\n";
+            });
+
+            try {
+                const response = await fetch('/send-chat-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        studentCode: studentCode,
+                        chatContent: chatContent,
+                        date: new Date().toLocaleDateString('ko-KR')
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('이메일 전송 실패');
+                }
+            } catch (error) {
+                console.error('Email sending error:', error);
+            }
+        }
+
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
         }
 
         function addMessage(message, isUser) {
@@ -342,6 +515,152 @@
                 verifyCode();
             }
         });
+
+        const MAX_MESSAGE_LENGTH = 500;
+
+        document.getElementById('messageInput').addEventListener('input', function(e) {
+            if (e.target.value.length > MAX_MESSAGE_LENGTH) {
+                e.target.value = e.target.value.slice(0, MAX_MESSAGE_LENGTH);
+                alert('메시지는 500자를 초과할 수 없습니다.');
+            }
+        });
+
+        // 입력창 자동 높이 조절
+        document.getElementById('messageInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // 메시지 전송 전 입력값 검증
+        function validateMessage(message) {
+            if (message.trim().length < 2) {
+                showError('메시지를 2자 이상 입력해주세요.');
+                return false;
+            }
+            return true;
+        }
+
+        // 에러 메시지 표시
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            setTimeout(() => errorDiv.remove(), 3000);
+            document.querySelector('.message-container').appendChild(errorDiv);
+        }
+
+        // 입력창 포커스 시 플레이스홀더 텍스트 변경
+        document.getElementById('messageInput').addEventListener('focus', function() {
+            this.placeholder = '무엇이 궁금하신가요?';
+        });
+
+        document.getElementById('messageInput').addEventListener('blur', function() {
+            this.placeholder = '궁금하신 내용을 입력해 주세요';
+        });
+
+        // 채팅창 상단 시간 표시
+        function updateChatTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.querySelector('.chat-header').textContent = timeString;
+        }
+        setInterval(updateChatTime, 60000);
+
+        // 메시지에 시간 추가
+        function addMessage(message, isUser) {
+            // ... 기존 코드 ...
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            messageDiv.appendChild(timeDiv);
+            
+            // 긴 메시지 처리
+            if (message.length > 200) {
+                messageDiv.classList.add('long-message');
+                const expandBtn = document.createElement('div');
+                expandBtn.className = 'message-expand';
+                expandBtn.textContent = '더보기';
+                expandBtn.onclick = function() {
+                    if (messageDiv.style.maxHeight) {
+                        messageDiv.style.maxHeight = '';
+                        expandBtn.textContent = '접기';
+                    } else {
+                        messageDiv.style.maxHeight = '300px';
+                        expandBtn.textContent = '더보기';
+                    }
+                };
+                messageDiv.appendChild(expandBtn);
+            }
+        }
+
+        // Enter 키로 전송 + Shift+Enter로 줄바꿈
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 입력창 자동 포커스
+        document.getElementById('codeInput').focus();
+
+        function saveChat() {
+            // 채팅 내용 수집
+            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
+            let chatContent = "=== 상담 내용 ===\n\n";
+            
+            messages.forEach(msg => {
+                const time = msg.querySelector('.message-time')?.textContent || '';
+                const content = msg.textContent.replace(time, '').trim();
+                const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
+                
+                chatContent += `${type} ${content}\n`;
+                if (time) chatContent += `(${time})\n`;
+                chatContent += "\n";
+            });
+
+            // 파일로 저장
+            const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
+            const filename = `상담내용_${date}.txt`;
+            
+            const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            
+            document.body.appendChild(a);
+            a.click();
+            
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        // 자동 저장 기능 (5분마다)
+        let chatHistory = [];
+        
+        function autoSaveChat() {
+            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
+            const newMessages = Array.from(messages).map(msg => ({
+                content: msg.textContent,
+                time: new Date().toISOString(),
+                type: msg.classList.contains('user-message') ? 'user' : 'bot'
+            }));
+            
+            chatHistory = newMessages;
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        // 5분마다 자동 저장
+        setInterval(autoSaveChat, 300000);
     </script>
 </body>
 </html>
