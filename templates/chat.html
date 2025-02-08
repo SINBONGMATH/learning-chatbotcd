@@ -314,7 +314,7 @@
 
     <div class="chat-container">
         <div class="chat-messages" id="chatMessages">
-            <!-- 하드코딩된 초기 메시지 제거 -->
+            <!-- 초기 메시지는 JavaScript로 처리 -->
         </div>
     </div>
     <div class="input-container">
@@ -331,96 +331,10 @@
     <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
 
     <script>
-        // 초기 메시지 표시
+        // 초기 메시지
         window.onload = function() {
             const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.<br><br>학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.<br><br>개인코드번호를 입력해 주세요.";
-            
-            const chatMessages = document.getElementById('chatMessages');
-            const logoMessage = document.createElement('div');
-            logoMessage.className = 'logo-message';
-            logoMessage.innerHTML = `
-                <div class="bot-message-with-logo">${initialMessage}</div>
-            `;
-            chatMessages.appendChild(logoMessage);
-        }
-
-        // 코드 확인 후 메시지
-        function showCodeConfirmation() {
-            const confirmMessage = "📌 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
-            addMessage(confirmMessage, false);
-        }
-
-        function verifyCode() {
-            const code = document.getElementById('codeInput').value;
-            if (code.trim() !== '') {
-                document.getElementById('messageContainer').style.display = 'flex';
-                document.querySelector('.code-container').style.display = 'none';
-                showCodeConfirmation();
-            } else {
-                alert('개인코드번호를 입력해주세요');
-            }
-        }
-
-        function showTypingIndicator() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.textContent = '답변을 작성중입니다...';
-            document.getElementById('chatMessages').appendChild(typingDiv);
-        }
-
-        // 메시지 전송 함수
-        async function sendMessage() {
-            const codeInput = document.getElementById('codeInput');
-            const messageInput = document.getElementById('messageInput');
-            const code = codeInput.value;
-            const message = messageInput.value;
-
-            if (!message) {
-                alert('메시지를 입력해주세요');
-                return;
-            }
-
-            // 사용자 메시지 표시
-            addMessage(message, true);
-            messageInput.value = '';
-
-            try {
-                // 서버에 메시지 전송
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        phone: code,
-                        message: message
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                
-                // 봇 응답을 4문장씩 나누어 표시
-                if (data && data.response) {
-                    const sentences = data.response.split(/(?<=[.!?])\s+/);
-                    for (let i = 0; i < sentences.length; i += 4) {
-                        const chunk = sentences.slice(i, i + 4).join(' ');
-                        if (chunk.trim()) {
-                            setTimeout(() => {
-                                addMessage(chunk, false);
-                            }, i * 2000);
-                        }
-                    }
-                } else {
-                    addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                addMessage('죄송합니다. 오류가 발생했습니다.', false);
-            }
+            addMessage(initialMessage, false);
         }
 
         // 메시지 추가 함수
@@ -444,6 +358,87 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        // 코드 확인 후 메시지
+        function showCodeConfirmation() {
+            const confirmMessage = "📌 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
+            addMessage(confirmMessage, false);
+        }
+
+        // 코드 확인
+        function verifyCode() {
+            const code = document.getElementById('codeInput').value;
+            if (code.trim() !== '') {
+                document.getElementById('messageContainer').style.display = 'flex';
+                document.querySelector('.code-container').style.display = 'none';
+                showCodeConfirmation();
+            } else {
+                alert('개인코드번호를 입력해주세요');
+            }
+        }
+
+        // 메시지 전송
+        async function sendMessage() {
+            const codeInput = document.getElementById('codeInput');
+            const messageInput = document.getElementById('messageInput');
+            const code = codeInput.value;
+            const message = messageInput.value;
+
+            if (!message) {
+                alert('메시지를 입력해주세요');
+                return;
+            }
+
+            addMessage(message, true);
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: code,
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                if (data && data.response) {
+                    const sentences = data.response.split(/(?<=[.!?])\s+/);
+                    for (let i = 0; i < sentences.length; i += 4) {
+                        const chunk = sentences.slice(i, i + 4).join(' ');
+                        if (chunk.trim()) {
+                            setTimeout(() => {
+                                addMessage(chunk, false);
+                            }, i * 2000);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('죄송합니다. 오류가 발생했습니다.', false);
+            }
+        }
+
+        // Enter 키 이벤트
+        document.getElementById('codeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyCode();
+            }
+        });
+
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
         function scrollToBottom() {
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.scrollTo({
@@ -451,20 +446,6 @@
                 behavior: 'smooth'
             });
         }
-
-        // Enter 키로 메시지 전송
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        // Enter 키로 코드 확인
-        document.getElementById('codeInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyCode();
-            }
-        });
 
         const MAX_MESSAGE_LENGTH = 500;
 
@@ -521,13 +502,15 @@
 
         // 메시지에 시간 추가
         function addMessage(message, isUser) {
-            // ... 기존 코드 ...
             const timeDiv = document.createElement('div');
             timeDiv.className = 'message-time';
             timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.textContent = message;
             messageDiv.appendChild(timeDiv);
             
             // 긴 메시지 처리
@@ -547,6 +530,17 @@
                 };
                 messageDiv.appendChild(expandBtn);
             }
+            
+            if (isUser) {
+                messageDiv.className = 'message user-message';
+            } else {
+                messageDiv.className = 'message bot-message';
+            }
+            
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.appendChild(messageDiv);
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // Enter 키로 전송 + Shift+Enter로 줄바꿈
