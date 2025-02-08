@@ -79,10 +79,9 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 12px 15px;  /* 기본 패딩 */
+            padding: 10px 15px;  /* 패딩 축소 */
             background: white;
             display: flex;
-            align-items: center;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
         }
 
@@ -99,14 +98,13 @@
 
         input {
             flex-grow: 1;
-            padding: 12px 15px;
-            border: 1px solid #e6e6e6;  /* 테두리 더 연하게 */
-            background-color: #fafafa;  /* 배경 살짝 추가 */
+            padding: 8px 15px;  /* 상하 패딩 축소 */
+            border: 1px solid #e0e0e0;
             border-radius: 20px;
-            font-size: 16px;
-            height: 24px;
+            font-size: 15px;  /* 폰트 크기 약간 축소 */
+            height: 20px;  /* 높이 축소 */
             margin-right: 12px;
-            transition: border-color 0.2s;  /* 부드러운 효과 */
+            background-color: #fafafa;
         }
 
         input:focus {
@@ -117,20 +115,15 @@
 
         button {
             padding: 0 20px;
-            height: 45px;
-            width: 80px;  /* 버튼 너비 고정 */
-            margin-right: 35px;  /* 오른쪽 여백 증가해서 왼쪽으로 이동 */
+            height: 36px;  /* 버튼 높이도 축소 */
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;  /* 버튼 모서리 둥글기 조정 */
             cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;  /* 부드러운 효과 */
+            font-size: 15px;
+            margin-right: 12px;
+            min-width: 70px;
         }
 
         button:hover {
@@ -338,15 +331,17 @@
     <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
 
     <script>
+        // 초기 메시지 표시
         window.onload = function() {
-            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다. 학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
+            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.<br><br>학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.<br><br>개인코드번호를 입력해 주세요.";
             
-            addMessage(initialMessage, false);
-
-            const savedChat = localStorage.getItem('chatHistory');
-            if (savedChat) {
-                chatHistory = JSON.parse(savedChat);
-            }
+            const chatMessages = document.getElementById('chatMessages');
+            const logoMessage = document.createElement('div');
+            logoMessage.className = 'logo-message';
+            logoMessage.innerHTML = `
+                <div class="bot-message-with-logo">${initialMessage}</div>
+            `;
+            chatMessages.appendChild(logoMessage);
         }
 
         // 코드 확인 후 메시지
@@ -373,24 +368,23 @@
             document.getElementById('chatMessages').appendChild(typingDiv);
         }
 
+        // 메시지 전송 함수
         async function sendMessage() {
-            const button = document.querySelector('.message-container button');
-            button.disabled = true;
+            const codeInput = document.getElementById('codeInput');
+            const messageInput = document.getElementById('messageInput');
+            const code = codeInput.value;
+            const message = messageInput.value;
+
+            if (!message) {
+                alert('메시지를 입력해주세요');
+                return;
+            }
+
+            // 사용자 메시지 표시
+            addMessage(message, true);
+            messageInput.value = '';
+
             try {
-                const codeInput = document.getElementById('codeInput');
-                const messageInput = document.getElementById('messageInput');
-                const code = codeInput.value;
-                const message = messageInput.value;
-
-                if (!message) {
-                    alert('메시지를 입력해주세요');
-                    return;
-                }
-
-                // 사용자 메시지 표시
-                addMessage(message, true);
-                messageInput.value = '';
-
                 // 서버에 메시지 전송
                 const response = await fetch('/chat', {
                     method: 'POST',
@@ -399,8 +393,7 @@
                     },
                     body: JSON.stringify({
                         phone: code,
-                        message: message,
-                        saveChat: true  // 채팅 저장 플래그 추가
+                        message: message
                     })
                 });
 
@@ -410,7 +403,7 @@
 
                 const data = await response.json();
                 
-                // 봇 응답을 4문장씩 나누어 표시 (2초 딜레이)
+                // 봇 응답을 4문장씩 나누어 표시
                 if (data && data.response) {
                     const sentences = data.response.split(/(?<=[.!?])\s+/);
                     for (let i = 0; i < sentences.length; i += 4) {
@@ -421,67 +414,16 @@
                             }, i * 2000);
                         }
                     }
-
-                    // 대화 종료 시 이메일 전송
-                    if (data.response.includes('상담을 종료') || data.response.includes('감사합니다')) {
-                        sendChatHistory(code);
-                    }
                 } else {
                     addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
                 }
             } catch (error) {
                 console.error('Error:', error);
                 addMessage('죄송합니다. 오류가 발생했습니다.', false);
-            } finally {
-                button.disabled = false;
-                document.querySelector('.typing-indicator').remove();
             }
         }
 
-        // 채팅 내용 이메일 전송 함수
-        async function sendChatHistory(studentCode) {
-            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
-            let chatContent = `=== 상담 내용 (학생 코드: ${studentCode}) ===\n\n`;
-            
-            messages.forEach(msg => {
-                const time = msg.querySelector('.message-time')?.textContent || '';
-                const content = msg.textContent.replace(time, '').trim();
-                const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
-                
-                chatContent += `${type} ${content}\n`;
-                if (time) chatContent += `(${time})\n`;
-                chatContent += "\n";
-            });
-
-            try {
-                const response = await fetch('/send-chat-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        studentCode: studentCode,
-                        chatContent: chatContent,
-                        date: new Date().toLocaleDateString('ko-KR')
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('이메일 전송 실패');
-                }
-            } catch (error) {
-                console.error('Email sending error:', error);
-            }
-        }
-
-        function scrollToBottom() {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.scrollTo({
-                top: chatMessages.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-
+        // 메시지 추가 함수
         function addMessage(message, isUser) {
             const chatMessages = document.getElementById('chatMessages');
             
@@ -500,6 +442,14 @@
             }
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
         }
 
         // Enter 키로 메시지 전송
