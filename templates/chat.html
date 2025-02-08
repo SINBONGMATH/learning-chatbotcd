@@ -96,20 +96,28 @@
         .message-input {
             flex-grow: 1;
             margin-right: 25px;
-            padding: 12px;  /* 내부 여백 증가 */
-            height: 45px;   /* 높이 20% 증가 */
-            font-size: 16px;  /* 글자 크기 조정 */
+            padding: 14px;
+            height: 54px;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
-        .send-button {
+        .send-button, .confirm-button {
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             padding: 8px 15px;
-            margin-right: 25px;
             width: 60px;
-            height: 45px;  /* 버튼 높이도 입력창과 맞춤 */
+            height: 54px;
+        }
+
+        .confirm-button {
+            margin-right: 0;
+        }
+
+        .send-button {
+            margin-right: 25px;
         }
 
         button:active {
