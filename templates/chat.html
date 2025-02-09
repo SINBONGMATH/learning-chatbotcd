@@ -75,7 +75,6 @@
             margin-left: 0;
             max-width: calc(85% - 46px);
             animation: fadeIn 0.3s ease;
-            color: #2c3e50;
         }
 
         .user-message {
@@ -89,7 +88,6 @@
             max-width: 85%;
             box-shadow: var(--message-shadow);
             animation: fadeIn 0.3s ease;
-            color: #2c3e50;
         }
 
         .message-time {
@@ -116,9 +114,9 @@
             align-items: center;
             gap: 12px;
             flex-grow: 1;
-            max-width: 1200px;
+            max-width: calc(100% - 40px);  /* 양쪽 여백 확보 */
             margin: 0 auto;
-            width: 100%;
+            padding: 0 20px;  /* 패딩 추가 */
         }
 
         .message-container {
@@ -155,15 +153,11 @@
             font-weight: 500;
             transition: all 0.2s ease;
             min-width: 80px;
+            margin-left: 10px;  /* 버튼 간격 조정 */
         }
 
         button:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        button:active {
-            transform: translateY(1px);
         }
 
         .save-chat-btn {
@@ -179,48 +173,11 @@
             font-size: 14px;
             font-weight: 500;
             z-index: 1000;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background-color: rgba(220, 53, 69, 0.1);
-            margin: 10px 0;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.1);
-            border-radius: 3px;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .long-message {
-            max-height: 300px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .message-expand {
-            color: var(--primary-color);
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 5px;
-            text-align: right;
         }
 
         @media screen and (max-width: 768px) {
@@ -241,9 +198,8 @@
                 padding: 12px 15px;
             }
 
-            button {
-                padding: 0 20px;
-                height: 44px;
+            .code-container, .message-container {
+                padding: 0 10px;  /* 모바일에서 패딩 축소 */
             }
         }
     </style>
@@ -363,11 +319,6 @@
                 return;
             }
 
-            if (message.length > 500) {
-                alert('메시지는 500자를 초과할 수 없습니다.');
-                return;
-            }
-
             addMessage(message, true);
             messageInput.value = '';
 
@@ -426,4 +377,30 @@
             messages.forEach(msg => {
                 const time = msg.querySelector('.message-time')?.textContent || '';
                 const content = msg.textContent.replace(time, '').trim();
-                const type = msg.classList.
+                const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
+                
+                chatContent += `${type} ${content}\n`;
+                if (time) chatContent += `(${time})\n`;
+                chatContent += "\n";
+            });
+
+            const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
+            const filename = `상담내용_${date}.txt`;
+            
+            const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            
+            document.body.appendChild(a);
+            a.click();
+            
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
