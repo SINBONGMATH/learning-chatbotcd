@@ -14,10 +14,12 @@
             --input-height: 60px;
         }
 
+
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -30,9 +32,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
+
         html {
             height: -webkit-fill-available;
         }
+
 
         .chat-container {
             height: 100vh;
@@ -44,6 +48,7 @@
             overflow: hidden;
         }
 
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -52,6 +57,7 @@
             scroll-behavior: smooth;
         }
 
+
         .logo-message {
             display: flex;
             align-items: flex-start;
@@ -59,6 +65,7 @@
             max-width: 100%;
             animation: fadeIn 0.3s ease;
         }
+
 
         .logo-container {
             width: 38px;
@@ -71,11 +78,13 @@
             box-shadow: var(--message-shadow);
         }
 
+
         .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
 
         .bot-message-with-logo {
             background-color: white;
@@ -88,11 +97,13 @@
             word-wrap: break-word;
         }
 
+
         .bot-message-with-logo a {
             color: var(--primary-color);
             text-decoration: underline;
             font-weight: 500;
         }
+
 
         .user-message {
             background-color: #FFE94A;
@@ -107,12 +118,14 @@
             animation: fadeIn 0.3s ease;
         }
 
+
         .message-time {
             font-size: 12px;
             color: #8FA3BF;
             margin-top: 6px;
             text-align: right;
         }
+
 
         .input-container {
             position: fixed;
@@ -128,6 +141,7 @@
             z-index: 1000;
         }
 
+
         .code-container, .message-container {
             display: flex;
             align-items: center;
@@ -137,9 +151,11 @@
             padding: 0 5px;
         }
 
+
         .message-container {
             display: none;
         }
+
 
         input {
             flex: 1;
@@ -153,12 +169,14 @@
             transition: all 0.2s ease;
         }
 
+
         input:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
             background-color: white;
         }
+
 
         button {
             padding: 0 24px;
@@ -175,9 +193,11 @@
             flex-shrink: 0;
         }
 
+
         button:active {
             transform: scale(0.95);
         }
+
 
         .save-chat-btn {
             position: fixed;
@@ -189,33 +209,38 @@
             z-index: 1000;
         }
 
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+
         .chat-messages::-webkit-scrollbar {
             display: none;
         }
+
 
         @media screen and (max-width: 768px) {
             input {
                 font-size: 16px;
             }
-            
+           
             .bot-message-with-logo, .user-message {
                 max-width: 85%;
                 font-size: 15px;
             }
-            
+           
             .input-container {
                 padding: 8px 10px;
             }
         }
 
+
         .typing-indicator .dot {
             animation: typing 1.4s infinite;
         }
+
 
         @keyframes typing {
             0%, 60%, 100% {
@@ -245,6 +270,7 @@
         <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
     </div>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const messages = [
@@ -255,7 +281,7 @@
                 "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.",
                 "🔮 또한 학습 진행 속도 예측의 정확도도 점차 높아질 것으로 기대됩니다.",
                 "개인코드번호를 입력해 주세요."            ];
-            
+           
             messages.forEach((message, index) => {
                 setTimeout(() => {
                     addMessage(message, false);
@@ -263,14 +289,15 @@
             });
         });
 
+
         function addMessage(message, isUser) {
             const chatMessages = document.getElementById('chatMessages');
-            
+           
             if (isUser) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'user-message';
                 messageDiv.innerHTML = message.replace(/\n/g, '<br>');
-                
+               
                 const timeDiv = document.createElement('div');
                 timeDiv.className = 'message-time';
                 timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
@@ -278,23 +305,23 @@
                     minute: '2-digit'
                 });
                 messageDiv.appendChild(timeDiv);
-                
+               
                 chatMessages.appendChild(messageDiv);
             } else {
                 const logoMessage = document.createElement('div');
                 logoMessage.className = 'logo-message';
-                
+               
                 const logoContainer = document.createElement('div');
                 logoContainer.className = 'logo-container';
                 const logoImg = document.createElement('img');
                 logoImg.src = '/static/logo.PNG';
                 logoImg.alt = '학원 로고';
                 logoContainer.appendChild(logoImg);
-                
+               
                 const botMessage = document.createElement('div');
                 botMessage.className = 'bot-message-with-logo';
                 botMessage.innerHTML = message.replace(/\n/g, '<br>');
-                
+               
                 const timeDiv = document.createElement('div');
                 timeDiv.className = 'message-time';
                 timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
@@ -302,14 +329,15 @@
                     minute: '2-digit'
                 });
                 botMessage.appendChild(timeDiv);
-                
+               
                 logoMessage.appendChild(logoContainer);
                 logoMessage.appendChild(botMessage);
                 chatMessages.appendChild(logoMessage);
             }
-            
+           
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+
 
         function verifyCode() {
             const code = document.getElementById('codeInput').value;
@@ -322,28 +350,24 @@
             }
         }
 
-        async function sendSplitMessages(responseText) {
-            const sentences = responseText.split(/([.!?])\s*/);
-            // ... 분할 로직
-        }
 
         async function sendMessage() {
             const codeInput = document.getElementById('codeInput');
             const messageInput = document.getElementById('messageInput');
             const code = codeInput.value;
             const message = messageInput.value;
-            
+           
             if (!message) {
                 alert('메시지를 입력해주세요');
                 return;
             }
-            
+           
             addMessage(message, true);
             messageInput.value = '';
-            
+           
             // 수정된 임시 응답 메시지
             addMessage("잠시만 기다려 주십시오. 학습이력을 확인 후 답변 드리도록 하겠습니다.", false);
-            
+           
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
@@ -356,15 +380,21 @@
                     })
                 });
 
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
 
+
                 const data = await response.json();
-                
+               
                 // 봇 응답 표시
                 if (data.response) {
-                    await sendSplitMessages(data.response);
+                    if (data.response.length > 100) {
+                        await sendSplitMessages(data.response);
+                    } else {
+                        addMessage(data.response, false);
+                    }
                 } else {
                     addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
                 }
@@ -374,33 +404,36 @@
             }
         }
 
+
         function saveChat() {
             const messages = document.querySelectorAll('.user-message, .logo-message');
             let chatContent = "=== 상담 내용 ===\n\n";
-            
+           
             messages.forEach(msg => {
                 const time = msg.querySelector('.message-time')?.textContent || '';
                 const content = msg.textContent.replace(time, '').trim();
                 const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
-                
+               
                 chatContent += `${type} ${content}\n`;
                 if (time) chatContent += `(${time})\n`;
                 chatContent += "\n";
             });
 
+
             const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
             const filename = `상담내용_${date}.txt`;
-            
+           
             const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            
+           
             a.href = url;
             a.download = filename;
             a.click();
-            
+           
             window.URL.revokeObjectURL(url);
         }
+
 
         // Enter 키 이벤트 처리
         document.getElementById('codeInput').addEventListener('keypress', function(e) {
@@ -409,12 +442,14 @@
             }
         });
 
+
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
+
 
         function showTypingIndicator() {
             // ... 로고와 함께 표시되는 타이핑 인디케이터
@@ -430,6 +465,20 @@
                     </div>
                 </div>
             `;
+        }
+
+        async function sendSplitMessages(responseText) {
+            const sentences = responseText.match(/[^.!?]+[.!?]+/g) || [responseText];
+            const formattedSentences = [];
+           
+            for (let i = 0; i < sentences.length; i += 2) {
+                formattedSentences.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
+            }
+           
+            for (const formattedSentence of formattedSentences) {
+                addMessage(formattedSentence, false);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait between messages
+            }
         }
     </script>
 </body>
