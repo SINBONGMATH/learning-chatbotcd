@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>강아 신봉캠퍼스 마스터케어👑</title>
+    <title>강아 신봉캠퍼스 마스터케어👑    <title>강아 신봉캠퍼스 마스터케어👑</title>
     <style>
         :root {
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -212,43 +212,54 @@
                 padding: 8px 10px;
             }
         }
+
+        .typing-indicator .dot {
+            animation: typing 1.4s infinite;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-5px);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="fixed-logo">
-        <img src="/static/logo.PNG" alt="학원 로고">
-    </div>
-
     <div class="chat-container">
         <div class="chat-messages" id="chatMessages"></div>
-    </div>
-    <div class="input-container">
-        <div class="code-container">
-            <input type="text" id="codeInput" placeholder="개인코드번호">
-            <button onclick="verifyCode()">확인</button>
+        <div class="input-container">
+            <div class="code-container">
+                <input type="text" id="codeInput" placeholder="개인코드번호를 입력해 주세요">
+                <button onclick="verifyCode()">확인</button>
+            </div>
+            <div class="message-container" id="messageContainer">
+                <input type="text" id="messageInput" placeholder="궁금하신 내용을 입력해 주세요">
+                <button onclick="sendMessage()">전송</button>
+            </div>
         </div>
-        <div class="message-container" id="messageContainer">
-            <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
-            <button onclick="sendMessage()">전송</button>
-        </div>
+        <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const messages = [
                 "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.",
-                "학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.", 
+                "학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.",
                 "⚠️ 학원 휴일에 조회하시는 경우, 학습상황이 업데이트되지 않아 실제 학습상황과 약간의 차이가 있을 수 있습니다.",
                 "📈 저희는 앞으로 더 다양한 데이터를 연결하여 시스템을 발전시켜 나갈 예정입니다.",
-                "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.", 
+                "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.",
                 "🔮 또한 학습 진행 속도 예측의 정확도도 점차 높아질 것으로 기대됩니다.",
-                "개인코드번호를 입력해 주세요."
-            ];
+                "개인코드번호를 입력해 주세요."            ];
             
             messages.forEach((message, index) => {
                 setTimeout(() => {
                     addMessage(message, false);
-                }, index * 2000);  // 2초 간격으로 수정
+                }, index * 1000);
             });
         });
 
@@ -311,77 +322,22 @@
             }
         }
 
-        async function sendSplitMessages(responseText) {
-            // 응답을 문장 단위로 분리
-            const sentences = responseText.split(/(?<=[.!?])\s+/);
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
             
-            // 2문장씩 그룹화
-            const messageGroups = [];
-            for (let i = 0; i < sentences.length; i += 2) {
-                if (i + 1 < sentences.length) {
-                    messageGroups.push(sentences[i] + ' ' + sentences[i + 1]);
-                } else {
-                    messageGroups.push(sentences[i]);
-                }
-            }
-
-            // 2.5초 간격으로 순차 전송
-            for (const message of messageGroups) {
-                await new Promise(resolve => setTimeout(resolve, 2500));
-                addMessage(message.trim(), false);
-            }
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            const code = document.getElementById('codeInput').value.trim();
-            
-            if (!message) return;
-            if (!code) {
-                addMessage("개인코드를 먼저 입력해주세요.", false);
+            if (!message) {
+                alert('메시지를 입력해주세요');
                 return;
             }
             
             addMessage(message, true);
-            input.value = '';
+            messageInput.value = '';
             
-            showTypingIndicator();
-            
-            try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        code: code,
-                        timestamp: new Date().toISOString()
-                    })
-                });
-
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        addMessage("개인코드가 유효하지 않습니다.", false);
-                        return;
-                    }
-                    throw new Error('서버 응답 오류');
-                }
-
-                const data = await response.json();
-                hideTypingIndicator();
-                
-                // 응답을 나누어 전송
-                if (data.response) {
-                    await sendSplitMessages(data.response);
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                hideTypingIndicator();
-                addMessage('죄송합니다. 오류가 발생했습니다. 다시 시도해주세요.', false);
-            }
+            // 임시 응답 메시지
+            setTimeout(() => {
+                addMessage("잠시만 기다려 주십시오. 학습이력을 확인 후 답변 드리도록 하겠습니다.", false);
+            }, 1000);
         }
 
         function saveChat() {
@@ -425,6 +381,22 @@
                 sendMessage();
             }
         });
+
+        function showTypingIndicator() {
+            // ... 로고와 함께 표시되는 타이핑 인디케이터
+            typingIndicator.innerHTML = `
+                <div class="logo-container">
+                    <img src="/static/logo.PNG" alt="학원 로고">
+                </div>
+                <div class="bot-message-with-logo">
+                    <div class="typing-indicator">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
