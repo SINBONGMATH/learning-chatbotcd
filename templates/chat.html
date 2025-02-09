@@ -403,11 +403,8 @@
 
         async function sendSplitMessages(responseText) {
             // 문장 분리 (., !, ?로 구분)
-            const sentences = responseText
-                .replace('https://tally.so/r/3qoLp9', '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>')
-                .replace('010-2963-5207', '<a href="tel:010-2963-5207">010-2963-5207</a>')
-                .replace('010-7352-3314', '<a href="tel:010-7352-3314">010-7352-3314</a>')
-                .match(/[^.!?]+[.!?]+/g) || [responseText];
+            const sentences = responseText.replace('https://tally.so/r/3qoLp9', '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>').match(/[^.!?]+[.!?]+/g) || [responseText];
+
 
             // 2개 문장씩 그룹화
             const formattedSentences = [];
