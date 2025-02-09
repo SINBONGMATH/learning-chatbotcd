@@ -22,7 +22,7 @@
             overflow: hidden;
             background: white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            z-index: 1000; /* 항상 위에 표시되도록 */
+            z-index: 1000;
         }
 
         .fixed-logo img {
@@ -38,7 +38,7 @@
             height: calc(100vh - 90px);
             display: flex;
             flex-direction: column;
-            background-color: #F5F8FF;
+            background-color: #E8F0FF;
             border-radius: 10px;
             position: relative;
         }
@@ -50,31 +50,60 @@
             margin-bottom: 70px;
         }
 
-        .message {
-            margin: 4px 0;  /* 메시지 간격 조정 */
-            padding: 0;  /* 패딩 제거 */
-            line-height: normal;  /* 기본 줄간격으로 설정 */
+        .bot-message-with-logo {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            max-width: 85%;
+        }
+
+        .logo-container {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bot-message {
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 0 15px 15px 15px;
+            margin-left: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .user-message {
             background-color: #FFE94A;
-            margin: 30px 0 30px auto !important;
-            padding: 25px 35px;  /* 내부 여백 증가 */
-            border-radius: 25px;  /* 더 둥글게 */
-            font-size: 17px;
-            line-height: 1.8;
-            letter-spacing: 0.5px;
+            padding: 12px 16px;
+            border-radius: 15px 0 15px 15px;
+            margin-left: auto;
+            margin-right: 0;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
             max-width: 85%;
-            display: inline-block;
-            width: fit-content;
-            min-width: auto;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin: 15px 0;
         }
 
-        .bot-message {
-            background-color: #FFFFFF;
-            color: black;
-            margin-right: auto;
-            border-radius: 15px 15px 15px 0;
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            text-align: right;
         }
 
         .input-container {
@@ -82,7 +111,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 10px 15px;  /* 패딩 축소 */
+            padding: 10px 15px;
             background: white;
             display: flex;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
@@ -101,11 +130,11 @@
 
         input {
             flex-grow: 1;
-            padding: 8px 15px;  /* 상하 패딩 축소 */
+            padding: 8px 15px;
             border: 1px solid #e0e0e0;
             border-radius: 20px;
-            font-size: 15px;  /* 폰트 크기 약간 축소 */
-            height: 20px;  /* 높이 축소 */
+            font-size: 15px;
+            height: 20px;
             margin-right: 12px;
             background-color: #fafafa;
         }
@@ -113,16 +142,16 @@
         input:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.1);  /* 부드러운 포커스 효과 */
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
         }
 
         button {
             padding: 0 20px;
-            height: 36px;  /* 버튼 높이도 축소 */
+            height: 36px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 18px;  /* 버튼 모서리 둥글기 조정 */
+            border-radius: 18px;
             cursor: pointer;
             font-size: 15px;
             margin-right: 12px;
@@ -130,11 +159,11 @@
         }
 
         button:hover {
-            background-color: #0056b3;  /* 호버 효과 */
+            background-color: #0056b3;
         }
 
         button:active {
-            transform: scale(0.98);  /* 클릭 시 살짝 눌리는 효과 */
+            transform: scale(0.98);
             background-color: #0056b3;
         }
 
@@ -143,170 +172,11 @@
             cursor: not-allowed;
         }
 
-        /* 링크 스타일 */
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        /* 이모지 크기 최적화 */
-        .message img.emoji {
-            height: 1.2em;
-            width: 1.2em;
-            margin: 0 .05em 0 .1em;
-            vertical-align: -0.1em;
-        }
-
-        /* 입력창 포커스 시 줌 방지 */
-        @media screen and (max-width: 768px) {
-            input, button {
-                font-size: 16px;
-            }
-        }
-
-        .bot-message-with-logo {
-            background-color: #FFFFFF !important;
-            padding: 25px 35px !important;  /* 내부 여백 증가 */
-            margin: 30px 0 !important;
-            line-height: 1.8;
-            display: inline-block;
-            max-width: 85%;
-            font-size: 17px;
-            letter-spacing: 0.5px;
-            border-radius: 25px !important;  /* 더 둥글게 */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            vertical-align: top;
-            width: fit-content;
-            min-width: auto;
-        }
-
-        .logo-message {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            background: none !important;  /* 배경 완전 제거 */
-        }
-
-        .message-time {
-            font-size: 13px;
-            color: #666;
-            margin-top: 10px;
-            text-align: right;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-
-        .message-container, .code-container {
-            padding-right: 15px;  /* 컨테이너 오른쪽 여백 추가 */
-        }
-
-        .message-container.hidden, .code-container.hidden {
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .typing-indicator {
-            padding: 12px 15px;
-            background-color: #f8f9fa;
-            border-radius: 15px;
-            margin: 10px 0;
-            display: none;
-            color: #666;
-            font-style: italic;
-        }
-
-        /* 새 메시지 도착 시 깜빡임 효과 */
-        @keyframes newMessage {
-            0% { background-color: rgba(0, 123, 255, 0.1); }
-            100% { background-color: transparent; }
-        }
-
-        .new-message {
-            animation: newMessage 1s ease-out;
-        }
-
-        /* 메시지 입력창 포커스 효과 개선 */
-        .input-focus-effect {
-            position: relative;
-            flex-grow: 1;
-        }
-
-        .input-focus-effect input:focus::placeholder {
-            color: #007bff;
-            transition: color 0.3s ease;
-        }
-
-        /* 메시지 전송 버튼 누를 때 효과 */
-        button:active:not(:disabled) {
-            transform: scale(0.95);
-            transition: transform 0.1s;
-        }
-
-        /* 에러 메시지 스타일 */
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: rgba(220, 53, 69, 0.1);
-            margin: 10px 0;
-        }
-
-        /* 채팅창 상단에 시간 표시 */
-        .chat-header {
-            text-align: center;
-            padding: 10px;
-            color: #666;
-            font-size: 13px;
-            border-bottom: 1px solid #eee;
-        }
-
-        /* 긴 메시지 더보기/접기 */
-        .long-message {
-            max-height: 300px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .message-expand {
-            color: #007bff;
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        /* 저장 버튼 스타일 */
         .save-chat-btn {
             position: fixed;
             top: 20px;
-            left: 15px !important;  /* 완전 왼쪽으로 강제 이동 */
-            right: auto !important;  /* 오른쪽 위치 제거 */
+            left: 15px !important;
+            right: auto !important;
             padding: 8px 15px;
             background-color: #007bff;
             color: white;
@@ -318,16 +188,22 @@
         }
 
         .save-chat-btn:hover {
-            background-color: #0056b3;  /* 호버 효과 */
+            background-color: #0056b3;
         }
 
-        /* 연속된 메시지일 때 간격 더 벌리기 */
-        .bot-message-with-logo + .bot-message-with-logo {
-            margin-top: 45px !important;  /* 연속된 메시지 간격 증가 */
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: rgba(220, 53, 69, 0.1);
+            margin: 10px 0;
         }
 
-        .user-message + .user-message {
-            margin-top: 45px !important;  /* 연속된 메시지 간격 증가 */
+        @media screen and (max-width: 768px) {
+            input, button {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -355,13 +231,11 @@
     <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
 
     <script>
-        // 초기 메시지
         window.onload = function() {
             const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.\n\n학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
             addMessage(initialMessage, false);
         }
 
-        // 메시지 추가 함수
         function addMessage(message, isUser) {
             const chatMessages = document.getElementById('chatMessages');
             
@@ -380,10 +254,18 @@
                 
                 chatMessages.appendChild(messageDiv);
             } else {
-                const logoMessage = document.createElement('div');
-                logoMessage.className = 'logo-message';
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'bot-message-with-logo';
+                
+                const logoContainer = document.createElement('div');
+                logoContainer.className = 'logo-container';
+                const logoImg = document.createElement('img');
+                logoImg.src = '/static/logo.PNG';
+                logoImg.alt = '학원 로고';
+                logoContainer.appendChild(logoImg);
+                
                 const botMessage = document.createElement('div');
-                botMessage.className = 'bot-message-with-logo';
+                botMessage.className = 'bot-message';
                 botMessage.innerHTML = message.replace(/\n/g, '<br>');
                 
                 const timeDiv = document.createElement('div');
@@ -394,20 +276,19 @@
                 });
                 botMessage.appendChild(timeDiv);
                 
-                logoMessage.appendChild(botMessage);
-                chatMessages.appendChild(logoMessage);
+                messageContainer.appendChild(logoContainer);
+                messageContainer.appendChild(botMessage);
+                chatMessages.appendChild(messageContainer);
             }
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // 코드 확인 후 메시지
         function showCodeConfirmation() {
             const confirmMessage = "✅ 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
             addMessage(confirmMessage, false);
         }
 
-        // 코드 확인
         function verifyCode() {
             const code = document.getElementById('codeInput').value;
             if (code.trim() !== '') {
@@ -419,7 +300,6 @@
             }
         }
 
-        // 메시지 전송
         async function sendMessage() {
             const codeInput = document.getElementById('codeInput');
             const messageInput = document.getElementById('messageInput');
@@ -469,7 +349,6 @@
             }
         }
 
-        // Enter 키 이벤트
         document.getElementById('codeInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 verifyCode();
@@ -477,128 +356,13 @@
         });
 
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        function scrollToBottom() {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.scrollTo({
-                top: chatMessages.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-
-        const MAX_MESSAGE_LENGTH = 500;
-
-        document.getElementById('messageInput').addEventListener('input', function(e) {
-            if (e.target.value.length > MAX_MESSAGE_LENGTH) {
-                e.target.value = e.target.value.slice(0, MAX_MESSAGE_LENGTH);
-                alert('메시지는 500자를 초과할 수 없습니다.');
-            }
-        });
-
-        // 입력창 자동 높이 조절
-        document.getElementById('messageInput').addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-
-        // 메시지 전송 전 입력값 검증
-        function validateMessage(message) {
-            if (message.trim().length < 2) {
-                showError('메시지를 2자 이상 입력해주세요.');
-                return false;
-            }
-            return true;
-        }
-
-        // 에러 메시지 표시
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.textContent = message;
-            setTimeout(() => errorDiv.remove(), 3000);
-            document.querySelector('.message-container').appendChild(errorDiv);
-        }
-
-        // 입력창 포커스 시 플레이스홀더 텍스트 변경
-        document.getElementById('messageInput').addEventListener('focus', function() {
-            this.placeholder = '무엇이 궁금하신가요?';
-        });
-
-        document.getElementById('messageInput').addEventListener('blur', function() {
-            this.placeholder = '궁금하신 내용을 입력해 주세요';
-        });
-
-        // 채팅창 상단 시간 표시
-        function updateChatTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ko-KR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            document.querySelector('.chat-header').textContent = timeString;
-        }
-        setInterval(updateChatTime, 60000);
-
-        // 메시지에 시간 추가
-        function addMessage(message, isUser) {
-            const timeDiv = document.createElement('div');
-            timeDiv.className = 'message-time';
-            timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message';
-            messageDiv.textContent = message;
-            messageDiv.appendChild(timeDiv);
-            
-            // 긴 메시지 처리
-            if (message.length > 200) {
-                messageDiv.classList.add('long-message');
-                const expandBtn = document.createElement('div');
-                expandBtn.className = 'message-expand';
-                expandBtn.textContent = '더보기';
-                expandBtn.onclick = function() {
-                    if (messageDiv.style.maxHeight) {
-                        messageDiv.style.maxHeight = '';
-                        expandBtn.textContent = '접기';
-                    } else {
-                        messageDiv.style.maxHeight = '300px';
-                        expandBtn.textContent = '더보기';
-                    }
-                };
-                messageDiv.appendChild(expandBtn);
-            }
-            
-            if (isUser) {
-                messageDiv.className = 'message user-message';
-            } else {
-                messageDiv.className = 'message bot-message';
-            }
-            
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.appendChild(messageDiv);
-            
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Enter 키로 전송 + Shift+Enter로 줄바꿈
-        document.getElementById('messageInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
 
-        // 입력창 자동 포커스
-        document.getElementById('codeInput').focus();
-
         function saveChat() {
-            // 채팅 내용 수집
             const messages = document.querySelectorAll('.message, .bot-message-with-logo');
             let chatContent = "=== 상담 내용 ===\n\n";
             
@@ -612,7 +376,6 @@
                 chatContent += "\n";
             });
 
-            // 파일로 저장
             const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
             const filename = `상담내용_${date}.txt`;
             
@@ -631,23 +394,7 @@
             document.body.removeChild(a);
         }
 
-        // 자동 저장 기능 (5분마다)
-        let chatHistory = [];
-        
-        function autoSaveChat() {
-            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
-            const newMessages = Array.from(messages).map(msg => ({
-                content: msg.textContent,
-                time: new Date().toISOString(),
-                type: msg.classList.contains('user-message') ? 'user' : 'bot'
-            }));
-            
-            chatHistory = newMessages;
-            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-        }
-
-        // 5분마다 자동 저장
-        setInterval(autoSaveChat, 300000);
+        document.getElementById('codeInput').focus();
     </script>
 </body>
 </html>
