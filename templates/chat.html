@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>강아 신봉캠퍼스 마스터케어</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>강아 신봉캠퍼스 마스터케어👑</title>
     <style>
         :root {
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -13,23 +12,26 @@
             --background-color: #F5F8FF;
             --message-shadow: 0 2px 4px rgba(0,0,0,0.08);
             --input-height: 60px;
-            --yellow-bubble: #FFE94A;
         }
 
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
+            margin: 0;
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: var(--background-color);
             height: 100vh;
             height: -webkit-fill-available;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            height: -webkit-fill-available;
         }
 
         .chat-container {
@@ -39,47 +41,23 @@
             flex-direction: column;
             background-color: var(--background-color);
             position: relative;
-        }
-
-        .chat-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: white;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .chat-header h1 {
-            font-size: 18px;
-            font-weight: 600;
+            overflow: hidden;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 80px 16px 90px;
             -webkit-overflow-scrolling: touch;
+            padding: 60px 15px calc(var(--input-height) + 20px) 15px;
+            scroll-behavior: smooth;
         }
 
-        .message-wrapper {
-            margin: 16px 0;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .message-wrapper.bot {
+        .logo-message {
             display: flex;
             align-items: flex-start;
-        }
-
-        .message-wrapper.user {
-            display: flex;
-            justify-content: flex-end;
+            margin: 20px 0;
+            max-width: 100%;
+            animation: fadeIn 0.3s ease;
         }
 
         .logo-container {
@@ -87,7 +65,7 @@
             height: 38px;
             border-radius: 50%;
             overflow: hidden;
-            margin-right: 12px;
+            margin-right: 8px;
             flex-shrink: 0;
             background: white;
             box-shadow: var(--message-shadow);
@@ -99,59 +77,41 @@
             object-fit: cover;
         }
 
-        .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 15px;
-            line-height: 1.5;
-            position: relative;
-        }
-
-        .bot .message {
-            background: white;
-            margin-left: 12px;
+        .bot-message-with-logo {
+            background-color: white;
+            padding: 15px 20px;
             border-radius: 0 16px 16px 16px;
+            font-size: 15px;
+            line-height: 1.6;
             box-shadow: var(--message-shadow);
+            max-width: calc(85% - 46px);
+            word-wrap: break-word;
         }
 
-        .user .message {
-            background: var(--yellow-bubble);
+        .bot-message-with-logo a {
+            color: var(--primary-color);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .user-message {
+            background-color: #FFE94A;
+            padding: 15px 20px;
             border-radius: 16px 0 16px 16px;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 85%;
             box-shadow: var(--message-shadow);
+            margin: 20px 0 20px auto;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
         }
 
         .message-time {
             font-size: 12px;
             color: #8FA3BF;
-            margin-top: 4px;
+            margin-top: 6px;
             text-align: right;
-        }
-
-        .quick-buttons {
-            display: none;
-            position: fixed;
-            bottom: var(--input-height);
-            left: 0;
-            right: 0;
-            padding: 12px;
-            background: white;
-            border-top: 1px solid #E1E8F5;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            z-index: 999;
-        }
-
-        .quick-buttons button {
-            margin-right: 8px;
-            padding: 8px 16px;
-            background-color: #f0f7ff;
-            color: var(--primary-color);
-            border: 1px solid #cce4ff;
-            border-radius: 18px;
-            font-size: 14px;
-            white-space: nowrap;
         }
 
         .input-container {
@@ -159,199 +119,74 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 12px 16px;
-            padding-bottom: calc(12px + var(--safe-area-inset-bottom));
+            padding: 8px 15px;
+            padding-bottom: calc(8px + var(--safe-area-inset-bottom));
             background: white;
-            box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
+            display: flex;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            height: var(--input-height);
             z-index: 1000;
         }
 
-        .input-group {
+        .code-container, .message-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            flex: 1;
+            max-width: 100%;
+            padding: 0 5px;
         }
 
-        .input-field {
+        .message-container {
+            display: none;
+        }
+
+        input {
             flex: 1;
-            height: 44px;
-            padding: 0 20px;
+            padding: 12px 20px;
             border: 1.5px solid #E1E8F5;
-            border-radius: 22px;
+            border-radius: 24px;
             font-size: 15px;
             background: #f8f9fa;
+            min-width: 0;
+            height: 44px;
             transition: all 0.2s ease;
         }
 
-        .input-field:focus {
+        input:focus {
             outline: none;
             border-color: var(--primary-color);
-            background: white;
             box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+            background-color: white;
         }
 
-        .send-button {
-            height: 44px;
+        button {
             padding: 0 24px;
+            height: 44px;
+            background-color: var(--primary-color);
+            color: white;
             border: none;
             border-radius: 22px;
-            background: var(--primary-color);
-            color: white;
             font-size: 15px;
             font-weight: 500;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .send-button:active {
-            background: var(--primary-hover);
-            transform: scale(0.98);
-        }
-
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 12px 16px;
-            background: white;
-            border-radius: 16px;
-            margin-left: 50px;
-            width: fit-content;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #007bff;
-            border-radius: 50%;
-            animation: typingBounce 0.5s infinite;
-        }
-
-        .typing-dot:nth-child(2) { animation-delay: 0.1s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.2s; }
-
-        .message-actions {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            display: none;
-        }
-
-        .message:hover .message-actions {
-            display: flex;
-        }
-
-        .action-button {
-            padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
+            min-width: 80px;
+            flex-shrink: 0;
         }
 
-        .action-button:hover {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+        button:active {
+            transform: scale(0.95);
         }
 
-        .modal {
-            display: none;
+        .save-chat-btn {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-            animation: modalShow 0.3s ease;
-        }
-
-        .consultation-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-weight: 500;
+            top: 15px;
+            left: 15px;
+            padding: 8px 20px;
+            height: 36px;
             font-size: 14px;
-        }
-
-        .form-group select,
-        .form-group input,
-        .form-group textarea {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 16px;
-        }
-
-        .floating-buttons {
-            position: fixed;
-            right: 16px;
-            bottom: calc(var(--input-height) + 16px);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             z-index: 1000;
-        }
-
-        .floating-button {
-            width: 48px;
-            height: 48px;
-            border-radius: 24px;
-            background: white;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .floating-button:hover {
-            transform: scale(1.1);
-        }
-
-        .reservation-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: red;
-            color: white;
-            border-radius: 10px;
-            padding: 2px 6px;
-            font-size: 12px;
-            display: none;
         }
 
         @keyframes fadeIn {
@@ -359,182 +194,142 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes modalShow {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes typingBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+        .chat-messages::-webkit-scrollbar {
+            display: none;
         }
 
         @media screen and (max-width: 768px) {
-            .message {
-                max-width: 85%;
-            }
-
-            .input-container {
-                padding: 8px 12px;
-            }
-
-            .input-field {
+            input {
                 font-size: 16px;
+            }
+            
+            .bot-message-with-logo, .user-message {
+                max-width: 85%;
+                font-size: 15px;
+            }
+            
+            .input-container {
+                padding: 8px 10px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="fixed-logo">
+        <img src="/static/logo.PNG" alt="학원 로고">
+    </div>
+
     <div class="chat-container">
-        <div class="chat-header">
-            <h1>강아 신봉캠퍼스 마스터케어</h1>
-        </div>
-
         <div class="chat-messages" id="chatMessages"></div>
-
-        <div class="quick-buttons" id="quickButtons">
-            <button onclick="askQuestion('학습이력')">학습 이력</button>
-            <button onclick="askQuestion('완료예상')">학습 완료 예상</button>
-            <button onclick="askQuestion('이해도')">현재 교재 이해도</button>
+    </div>
+    <div class="input-container">
+        <div class="code-container">
+            <input type="text" id="codeInput" placeholder="개인코드번호">
+            <button onclick="verifyCode()">확인</button>
         </div>
-
-        <div class="input-container">
-            <div class="input-group" id="codeContainer">
-                <input type="text" class="input-field" id="codeInput" placeholder="개인코드번호를 입력해 주세요">
-                <button class="send-button" onclick="verifyCode()">확인</button>
-            </div>
-            <div class="input-group" id="messageContainer" style="display: none;">
-                <input type="text" class="input-field" id="messageInput" placeholder="궁금하신 내용을 입력해 주세요">
-                <button class="send-button" onclick="sendMessage()">전송</button>
-            </div>
-        </div>
-
-        <div class="modal" id="consultationModal">
-            <div class="modal-content">
-                <h2 style="margin-bottom: 16px;">상담 예약</h2>
-                <form class="consultation-form" onsubmit="submitConsultation(event)">
-                    <div class="form-group">
-                        <label>상담 희망 일자</label>
-                        <input type="date" required min="2024-02-10">
-                    </div>
-                    <div class="form-group">
-                        <label>상담 희망 시간</label>
-                        <select required>
-                            <option value="">시간을 선택하세요</option>
-                            <option>14:00</option>
-                            <option>15:00</option>
-                            <option>16:00</option>
-                            <option>17:00</option>
-                            <option>18:00</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>상담 내용</label>
-                        <textarea rows="3" placeholder="상담하고 싶은 내용을 간단히 적어주세요" required></textarea>
-                    </div>
-                    <div class="modal-buttons">
-                        <button type="button" class="action-button" onclick="closeModal()">취소</button>
-                        <button type="submit" class="send-button" style="height: 36px;">예약하기</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="floating-buttons">
-            <button class="floating-button" onclick="saveToPDF()" title="PDF로 저장">
-                📑
-            </button>
-            <button class="floating-button" onclick="openConsultationModal()" title="상담 예약">
-                📅
-                <span id="reservationBadge" class="reservation-badge"></span>
-            </button>
+        <div class="message-container" id="messageContainer">
+            <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
+            <button onclick="sendMessage()">전송</button>
         </div>
     </div>
-<script>
-        let studentInfo = null;
-        let isTyping = false;
 
-        // 초기 메시지 배열 - 두 문장씩 그룹화
-        const WELCOME_MESSAGES = [
-            [
-                "👋 안녕하세요!",
-                "강의하는 아이들 수학학원 수지신봉캠퍼스입니다."
-            ],
-            [
-                "📚 학생들의 학습 데이터를 바탕으로",
-                "맞춤 상담을 도와드리겠습니다."
-            ],
-            [
-                "⚠️ 학원 휴일에 조회하시는 경우,",
-                "학습상황이 업데이트되지 않아 실제 학습상황과 약간의 차이가 있을 수 있습니다."
-            ],
-            [
-                "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서,",
-                "더 정교한 학습계획 작성이 가능해질 것입니다."
-            ],
-            [
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = [
+                "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.",
+                "학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.", 
+                "⚠️ 학원 휴일에 조회하시는 경우, 학습상황이 업데이트되지 않아 실제 학습상황과 약간의 차이가 있을 수 있습니다.",
+                "📈 저희는 앞으로 더 다양한 데이터를 연결하여 시스템을 발전시켜 나갈 예정입니다.",
+                "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.", 
+                "🔮 또한 학습 진행 속도 예측의 정확도도 점차 높아질 것으로 기대됩니다.",
                 "개인코드번호를 입력해 주세요."
-            ]
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // 초기 메시지 순차적 표시 (2.5초 간격)
-            let messageIndex = 0;
-
-            function showNextMessage() {
-                if (messageIndex < WELCOME_MESSAGES.length) {
-                    const messageGroup = WELCOME_MESSAGES[messageIndex];
-                    
-                    // 그룹 내 첫 번째 메시지 표시
-                    addMessage(messageGroup[0], false);
-                    
-                    // 그룹 내 두 번째 메시지가 있다면 0.5초 후 표시
-                    if (messageGroup.length > 1) {
-                        setTimeout(() => {
-                            addMessage(messageGroup[1], false);
-                        }, 500);
-                    }
-                    
-                    messageIndex++;
-                    // 다음 그룹은 2.5초 후 시작
-                    if (messageIndex < WELCOME_MESSAGES.length) {
-                        setTimeout(showNextMessage, 2500);
-                    }
-                }
-            }
-
-            showNextMessage();
-
-            // Enter 키 이벤트 처리
-            document.getElementById('codeInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') verifyCode();
-            });
-            document.getElementById('messageInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
+            ];
+            
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    addMessage(message, false);
+                }, index * 2000);  // 2초 간격으로 수정
             });
         });
 
-        function showTypingIndicator() {
-            if (isTyping) return;
-            isTyping = true;
-            const indicator = document.createElement('div');
-            indicator.className = 'typing-indicator';
-            indicator.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            indicator.id = 'typingIndicator';
-            document.getElementById('chatMessages').appendChild(indicator);
-            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        function addMessage(message, isUser) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            if (isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'user-message';
+                messageDiv.innerHTML = message.replace(/\n/g, '<br>');
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                messageDiv.appendChild(timeDiv);
+                
+                chatMessages.appendChild(messageDiv);
+            } else {
+                const logoMessage = document.createElement('div');
+                logoMessage.className = 'logo-message';
+                
+                const logoContainer = document.createElement('div');
+                logoContainer.className = 'logo-container';
+                const logoImg = document.createElement('img');
+                logoImg.src = '/static/logo.PNG';
+                logoImg.alt = '학원 로고';
+                logoContainer.appendChild(logoImg);
+                
+                const botMessage = document.createElement('div');
+                botMessage.className = 'bot-message-with-logo';
+                botMessage.innerHTML = message.replace(/\n/g, '<br>');
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                botMessage.appendChild(timeDiv);
+                
+                logoMessage.appendChild(logoContainer);
+                logoMessage.appendChild(botMessage);
+                chatMessages.appendChild(logoMessage);
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function hideTypingIndicator() {
-            const indicator = document.getElementById('typingIndicator');
-            if (indicator) {
-                indicator.remove();
+        function verifyCode() {
+            const code = document.getElementById('codeInput').value;
+            if (code.trim() !== '') {
+                document.getElementById('messageContainer').style.display = 'flex';
+                document.querySelector('.code-container').style.display = 'none';
+                addMessage("✅ 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.", false);
+            } else {
+                alert('개인코드번호를 입력해주세요');
             }
-            isTyping = false;
+        }
+
+        async function sendSplitMessages(responseText) {
+            // 응답을 문장 단위로 분리
+            const sentences = responseText.split(/(?<=[.!?])\s+/);
+            
+            // 2문장씩 그룹화
+            const messageGroups = [];
+            for (let i = 0; i < sentences.length; i += 2) {
+                if (i + 1 < sentences.length) {
+                    messageGroups.push(sentences[i] + ' ' + sentences[i + 1]);
+                } else {
+                    messageGroups.push(sentences[i]);
+                }
+            }
+
+            // 2.5초 간격으로 순차 전송
+            for (const message of messageGroups) {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                addMessage(message.trim(), false);
+            }
         }
 
         async function sendMessage() {
@@ -548,7 +343,6 @@
                 return;
             }
             
-            // 사용자 메시지 표시
             addMessage(message, true);
             input.value = '';
             
@@ -578,9 +372,9 @@
                 const data = await response.json();
                 hideTypingIndicator();
                 
-                // 봇 응답 표시
+                // 응답을 나누어 전송
                 if (data.response) {
-                    addMessage(data.response, false);
+                    await sendSplitMessages(data.response);
                 }
                 
             } catch (error) {
@@ -590,203 +384,47 @@
             }
         }
 
-        function verifyCode() {
-            const code = document.getElementById('codeInput').value.trim();
-            if (!code) {
-                alert('개인코드번호를 입력해주세요');
-                return;
-            }
-
-            try {
-                // 테스트용 학생 정보
-                studentInfo = {
-                    name: "김철수",
-                    grade: "중3",
-                    class: "내신집중반",
-                    lastAttendance: "2024-02-09",
-                    currentBook: "실전수학 - 기하와 벡터",
-                    progress: 72,
-                    teacher: "이영희"
-                };
-
-                document.getElementById('messageContainer').style.display = 'flex';
-                document.getElementById('codeContainer').style.display = 'none';
-                document.getElementById('quickButtons').style.display = 'flex';
-
-                const studentInfoMessage = `✅ 학생 정보가 확인되었습니다.
-
-📚 [${studentInfo.name}] 학생
-- 학년: ${studentInfo.grade}
-- 수강: ${studentInfo.class}
-- 현재 교재: ${studentInfo.currentBook}
-- 진도율: ${studentInfo.progress}%
-- 담당 선생님: ${studentInfo.teacher}
-- 최근 등원: ${studentInfo.lastAttendance}
-
-궁금하신 내용을 입력해 주세요.`;
-
-                addMessage(studentInfoMessage, false);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('개인코드 확인 중 오류가 발생했습니다. 다시 시도해주세요.');
-            }
-        }
-
-        function addMessage(text, isUser) {
-            const chatMessages = document.getElementById('chatMessages');
-            const wrapper = document.createElement('div');
-            wrapper.className = `message-wrapper ${isUser ? 'user' : 'bot'}`;
-
-            let messageHTML = '';
+        function saveChat() {
+            const messages = document.querySelectorAll('.user-message, .logo-message');
+            let chatContent = "=== 상담 내용 ===\n\n";
             
-            if (!isUser) {
-                messageHTML += `
-                    <div class="logo-container">
-                        <img src="/static/logo.PNG" alt="학원 로고" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'38\\' height=\\'38\\' viewBox=\\'0 0 38 38\\'><rect width=\\'38\\' height=\\'38\\' fill=\\%23007bff\\'/></svg>'">
-                    </div>`;
-            }
-
-            messageHTML += `
-                <div class="message">
-                    <div class="message-actions">
-                        <button class="action-button" onclick="copyMessage(this.parentElement.parentElement)">복사</button>
-                    </div>
-                    <p>${text.replace(/\n/g, '<br>')}</p>
-                    <div class="message-time">
-                        ${new Date().toLocaleTimeString('ko-KR', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </div>
-                </div>`;
-
-            wrapper.innerHTML = messageHTML;
-            chatMessages.appendChild(wrapper);
-            
-            chatMessages.scrollTo({
-                top: chatMessages.scrollHeight,
-                behavior: 'smooth'
+            messages.forEach(msg => {
+                const time = msg.querySelector('.message-time')?.textContent || '';
+                const content = msg.textContent.replace(time, '').trim();
+                const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
+                
+                chatContent += `${type} ${content}\n`;
+                if (time) chatContent += `(${time})\n`;
+                chatContent += "\n";
             });
-        }
 
-        function askQuestion(type) {
-            if (!studentInfo) return;
-
-            const questions = {
-                '학습이력': `${studentInfo.name} 학생의 학습 이력을 알고 싶습니다.`,
-                '완료예상': `${studentInfo.name} 학생의 다음 학기 완료 시기가 궁금합니다.`,
-                '이해도': `${studentInfo.name} 학생의 현재 교재 학습 이해도는 어떤가요?`
-            };
-
-            const question = questions[type];
-            if (!question) return;
-
-            const messageInput = document.getElementById('messageInput');
-            messageInput.value = question;
-            sendMessage();
-        }
-
-        function copyMessage(element) {
-            const text = element.querySelector('p').textContent;
-            navigator.clipboard.writeText(text)
-                .then(() => alert('메시지가 복사되었습니다.'))
-                .catch(err => console.error('복사 실패:', err));
-        }
-
-        // PDF 저장 기능
-        function saveToPDF() {
-            const element = document.querySelector('.chat-messages');
-            const opt = {
-                margin: 1,
-                filename: '상담내용.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().from(element).set(opt).save();
-        }
-
-        // 상담 예약 관련 기능
-        function openConsultationModal() {
-            document.getElementById('consultationModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('consultationModal').style.display = 'none';
-        }
-
-        function submitConsultation(event) {
-            event.preventDefault();
+            const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
+            const filename = `상담내용_${date}.txt`;
             
-            const date = event.target.querySelector('input[type="date"]').value;
-            const time = event.target.querySelector('select').value;
-            const content = event.target.querySelector('textarea').value;
+            const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
             
-            // 새로운 예약 데이터 생성
-            const reservation = {
-                id: Date.now(),
-                date: date,
-                time: time,
-                content: content,
-                studentName: studentInfo?.name || '학생',
-                status: '신규',
-                createdAt: new Date().toISOString()
-            };
-
-            // LocalStorage에서 기존 예약 목록 가져오기
-            let reservations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            a.href = url;
+            a.download = filename;
+            a.click();
             
-            // 새 예약 추가
-            reservations.push(reservation);
-            
-            // LocalStorage에 저장
-            localStorage.setItem('consultations', JSON.stringify(reservations));
-
-            // 채팅창에 예약 확인 메시지 표시
-            const confirmMessage = `📅 상담 예약이 접수되었습니다.
-            
-- 예약 일시: ${date} ${time}
-- 상담 내용: ${content}
-
-선생님 확인 후 연락드리겠습니다.`;
-
-            addMessage(confirmMessage, false);
-            closeModal();
-            event.target.reset();
-            updateReservationBadge();
+            window.URL.revokeObjectURL(url);
         }
 
-        function updateReservationBadge() {
-            const reservations = JSON.parse(localStorage.getItem('consultations') || '[]');
-            const newReservations = reservations.filter(r => r.status === '신규').length;
-            
-            const badge = document.getElementById('reservationBadge');
-            if (badge) {
-                badge.textContent = newReservations || '';
-                badge.style.display = newReservations ? 'block' : 'none';
-            }
-        }
-
-        // 관리자 모드 토글 (Ctrl + Shift + A)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                showAdminConsultations();
+        // Enter 키 이벤트 처리
+        document.getElementById('codeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyCode();
             }
         });
 
-        // 관리자 예약 목록 표시
-        function showAdminConsultations() {
-            const reservations = JSON.parse(localStorage.getItem('consultations') || '[]');
-            
-            const adminMessage = `📋 상담 예약 목록 (총 ${reservations.length}건)
-
-${reservations.map(r => `
-[${r.status}] ${r.studentName}
-📅 ${r.date} ${r.time}
-📝 ${r.content}
-─────────────`).join('\n')}`;
-
-            addMessage(adminMessage, false);
-        }
-    </script></body>
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
 </html>
