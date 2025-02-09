@@ -322,6 +322,11 @@
             }
         }
 
+        async function sendSplitMessages(responseText) {
+            const sentences = responseText.split(/([.!?])\s*/);
+            // ... 분할 로직
+        }
+
         async function sendMessage() {
             const codeInput = document.getElementById('codeInput');
             const messageInput = document.getElementById('messageInput');
@@ -359,7 +364,7 @@
                 
                 // 봇 응답 표시
                 if (data.response) {
-                    addMessage(data.response, false);
+                    await sendSplitMessages(data.response);
                 } else {
                     addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
                 }
