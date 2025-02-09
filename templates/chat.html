@@ -322,8 +322,10 @@
             }
         }
 
-        function sendMessage() {
+        async function sendMessage() {
+            const codeInput = document.getElementById('codeInput');
             const messageInput = document.getElementById('messageInput');
+            const code = codeInput.value;
             const message = messageInput.value;
             
             if (!message) {
@@ -334,10 +336,37 @@
             addMessage(message, true);
             messageInput.value = '';
             
-            // 임시 응답 메시지
-            setTimeout(() => {
-                addMessage("잠시만 기다려 주십시오. 학습이력을 확인 후 답변 드리도록 하겠습니다.", false);
-            }, 1000);
+            // 수정된 임시 응답 메시지
+            addMessage("잠시만 기다려 주십시오. 학습이력을 확인 후 답변 드리도록 하겠습니다.", false);
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: code,
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                // 봇 응답 표시
+                if (data.response) {
+                    addMessage(data.response, false);
+                } else {
+                    addMessage('죄송합니다. 응답을 받지 못했습니다.', false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('죄송합니다. 오류가 발생했습니다.', false);
+            }
         }
 
         function saveChat() {
