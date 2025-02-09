@@ -11,7 +11,6 @@
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
-
         .fixed-logo {
             position: fixed;
             top: 10px;
@@ -24,13 +23,11 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             z-index: 1000;
         }
-
         .fixed-logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .chat-container {
             max-width: 100%;
             margin: 0 auto;
@@ -38,74 +35,61 @@
             height: calc(100vh - 90px);
             display: flex;
             flex-direction: column;
-            background-color: #E8F0FF;
+            background-color: #F5F8FF;
             border-radius: 10px;
             position: relative;
         }
-
         .chat-messages {
             flex-grow: 1;
             overflow-y: auto;
             padding: 60px 25px 25px 25px;
             margin-bottom: 70px;
         }
-
-        .bot-message-with-logo {
-            display: flex;
-            align-items: flex-start;
-            margin: 15px 0;
-            max-width: 85%;
+        .message {
+            margin: 4px 0;
+            padding: 0;
+            line-height: normal;
         }
-
-        .logo-container {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 10px;
-            flex-shrink: 0;
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .bot-message {
-            background-color: white;
-            padding: 12px 16px;
-            border-radius: 0 15px 15px 15px;
-            margin-left: 8px;
-            font-size: 15px;
-            line-height: 1.5;
-            position: relative;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
         .user-message {
             background-color: #FFE94A;
-            padding: 12px 16px;
-            border-radius: 15px 0 15px 15px;
-            margin-left: auto;
-            margin-right: 0;
-            font-size: 15px;
-            line-height: 1.5;
-            position: relative;
+            margin: 30px 0 30px auto !important;
+            padding: 25px 35px;
+            border-radius: 25px;
+            font-size: 17px;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
             max-width: 85%;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            margin: 15px 0;
+            display: inline-block;
+            width: fit-content;
+            min-width: auto;
         }
-
+        .bot-message-with-logo {
+            background-color: #FFFFFF !important;
+            padding: 25px 35px !important;
+            margin: 30px 0 !important;
+            line-height: 1.8;
+            display: inline-block;
+            max-width: 85%;
+            font-size: 17px;
+            letter-spacing: 0.5px;
+            border-radius: 25px !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            vertical-align: top;
+            width: fit-content;
+            min-width: auto;
+        }
+        .logo-message {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: none !important;
+        }
         .message-time {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
             text-align: right;
         }
-
         .input-container {
             position: fixed;
             bottom: 0;
@@ -116,18 +100,15 @@
             display: flex;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
         }
-
         .code-container, .message-container {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-grow: 1;
         }
-
         .message-container {
             display: none;
         }
-
         input {
             flex-grow: 1;
             padding: 8px 15px;
@@ -138,13 +119,11 @@
             margin-right: 12px;
             background-color: #fafafa;
         }
-
         input:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
         }
-
         button {
             padding: 0 20px;
             height: 36px;
@@ -157,21 +136,116 @@
             margin-right: 12px;
             min-width: 70px;
         }
-
         button:hover {
             background-color: #0056b3;
         }
-
         button:active {
             transform: scale(0.98);
             background-color: #0056b3;
         }
-
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
-
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .message img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
+        }
+        @media screen and (max-width: 768px) {
+            input, button {
+                font-size: 16px;
+            }
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .message-container, .code-container {
+            padding-right: 15px;
+        }
+        .message-container.hidden, .code-container.hidden {
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .typing-indicator {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            margin: 10px 0;
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+        @keyframes newMessage {
+            0% { background-color: rgba(0, 123, 255, 0.1); }
+            100% { background-color: transparent; }
+        }
+        .new-message {
+            animation: newMessage 1s ease-out;
+        }
+        .input-focus-effect {
+            position: relative;
+            flex-grow: 1;
+        }
+        .input-focus-effect input:focus::placeholder {
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+        button:active:not(:disabled) {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: rgba(220, 53, 69, 0.1);
+            margin: 10px 0;
+        }
+        .chat-header {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 1px solid #eee;
+        }
+        .long-message {
+            max-height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+        .message-expand {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 5px;
+        }
         .save-chat-btn {
             position: fixed;
             top: 20px;
@@ -186,24 +260,14 @@
             font-size: 14px;
             z-index: 1000;
         }
-
         .save-chat-btn:hover {
             background-color: #0056b3;
         }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: rgba(220, 53, 69, 0.1);
-            margin: 10px 0;
+        .bot-message-with-logo + .bot-message-with-logo {
+            margin-top: 45px !important;
         }
-
-        @media screen and (max-width: 768px) {
-            input, button {
-                font-size: 16px;
-            }
+        .user-message + .user-message {
+            margin-top: 45px !important;
         }
     </style>
 </head>
@@ -217,6 +281,7 @@
             <!-- 초기 메시지는 JavaScript로 처리 -->
         </div>
     </div>
+
     <div class="input-container">
         <div class="code-container">
             <input type="text" id="codeInput" placeholder="개인코드번호를 입력해 주세요">
@@ -231,83 +296,71 @@
     <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
 
     <script>
-        window.onload = function() {
-            const messages = [
-                "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.",
-                
-                "학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.",
-                
-                "⚠️ 학원 휴일에 조회하시는 경우, 학습상황이 업데이트되지 않아 실제 학습상황과 약간의 차이가 있을 수 있습니다.",
-                
-                "📈 저희는 앞으로 더 다양한 데이터를 연결하여 시스템을 발전시켜 나갈 예정입니다.",
-                
-                "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.",
-                
-                "🔮 또한 학습 진행 속도 예측의 정확도도 점차 높아질 것으로 기대됩니다.",
-                
-                "개인코드번호를 입력해 주세요."
-            ];
-            
-            messages.forEach((msg, index) => {
-                setTimeout(() => {
-                    addMessage(msg, false);
-                }, index * 2500); // 2.5초 간격
-            });
-        }
-
+        // 통합된 addMessage 함수: 사용자와 상담사 메시지를 모두 처리
         function addMessage(message, isUser) {
             const chatMessages = document.getElementById('chatMessages');
-            
+            const timeString = new Date().toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            let messageDiv;
             if (isUser) {
-                const messageDiv = document.createElement('div');
+                messageDiv = document.createElement('div');
                 messageDiv.className = 'message user-message';
                 messageDiv.innerHTML = message.replace(/\n/g, '<br>');
-                
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'message-time';
-                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                messageDiv.appendChild(timeDiv);
-                
-                chatMessages.appendChild(messageDiv);
             } else {
-                const messageContainer = document.createElement('div');
-                messageContainer.className = 'bot-message-with-logo';
-                
-                const logoContainer = document.createElement('div');
-                logoContainer.className = 'logo-container';
-                const logoImg = document.createElement('img');
-                logoImg.src = '/static/logo.PNG';
-                logoImg.alt = '학원 로고';
-                logoContainer.appendChild(logoImg);
-                
-                const botMessage = document.createElement('div');
-                botMessage.className = 'bot-message';
-                botMessage.innerHTML = message.replace(/\n/g, '<br>');
-                
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'message-time';
-                timeDiv.textContent = new Date().toLocaleTimeString('ko-KR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                botMessage.appendChild(timeDiv);
-                
-                messageContainer.appendChild(logoContainer);
-                messageContainer.appendChild(botMessage);
-                chatMessages.appendChild(messageContainer);
+                // 상담사(봇) 메시지: 로고 포함
+                const logoMessage = document.createElement('div');
+                logoMessage.className = 'logo-message';
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot-message-with-logo';
+                botMessageDiv.innerHTML = message.replace(/\n/g, '<br>');
+                logoMessage.appendChild(botMessageDiv);
+                // 메시지 처리를 위해 messageDiv는 botMessageDiv로 사용
+                messageDiv = botMessageDiv;
             }
             
+            // 긴 메시지일 경우 '더보기/접기' 기능 추가 (200자 이상)
+            if (message.length > 200) {
+                messageDiv.classList.add('long-message');
+                const expandBtn = document.createElement('div');
+                expandBtn.className = 'message-expand';
+                expandBtn.textContent = '더보기';
+                expandBtn.onclick = function() {
+                    if (messageDiv.style.maxHeight) {
+                        messageDiv.style.maxHeight = '';
+                        expandBtn.textContent = '접기';
+                    } else {
+                        messageDiv.style.maxHeight = '300px';
+                        expandBtn.textContent = '더보기';
+                    }
+                };
+                messageDiv.appendChild(expandBtn);
+            }
+            
+            // 메시지 시간 추가
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = timeString;
+            messageDiv.appendChild(timeDiv);
+            
+            chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        // 페이지 로드 시 초기 메시지 출력
+        window.onload = function() {
+            const initialMessage = "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.\n\n학생들의 학습 데이터를 바탕으로 맞춤 상담을 도와드리겠습니다.\n\n개인코드번호를 입력해 주세요.";
+            addMessage(initialMessage, false);
+        }
+
+        // 코드 인증 후 안내 메시지 출력
         function showCodeConfirmation() {
             const confirmMessage = "✅ 개인코드가 확인되었습니다. 문의하실 내용을 입력해주세요.";
             addMessage(confirmMessage, false);
         }
 
+        // 코드 확인 처리
         function verifyCode() {
             const code = document.getElementById('codeInput').value;
             if (code.trim() !== '') {
@@ -319,6 +372,7 @@
             }
         }
 
+        // 메시지 전송 처리 (서버로 POST 요청)
         async function sendMessage() {
             const codeInput = document.getElementById('codeInput');
             const messageInput = document.getElementById('messageInput');
@@ -327,6 +381,10 @@
 
             if (!message) {
                 alert('메시지를 입력해주세요');
+                return;
+            }
+            if(message.trim().length < 2){
+                alert('메시지를 2자 이상 입력해주세요.');
                 return;
             }
 
@@ -350,15 +408,14 @@
                 }
 
                 const data = await response.json();
-                
                 if (data && data.response) {
                     const sentences = data.response.split(/(?<=[.!?])\s+/);
-                    for (let i = 0; i < sentences.length; i += 2) {
-                        const chunk = sentences.slice(i, i + 2).join(' ');
+                    for (let i = 0; i < sentences.length; i += 4) {
+                        const chunk = sentences.slice(i, i + 4).join(' ');
                         if (chunk.trim()) {
                             setTimeout(() => {
                                 addMessage(chunk, false);
-                            }, i * 2500);
+                            }, i * 2000);
                         }
                     }
                 }
@@ -368,52 +425,75 @@
             }
         }
 
+        // Enter 키로 전송 및 Shift+Enter로 줄바꿈 처리
         document.getElementById('codeInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 verifyCode();
             }
         });
-
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
+        document.getElementById('messageInput').addEventListener('input', function(e) {
+            const MAX_MESSAGE_LENGTH = 500;
+            if (e.target.value.length > MAX_MESSAGE_LENGTH) {
+                e.target.value = e.target.value.slice(0, MAX_MESSAGE_LENGTH);
+                alert('메시지는 500자를 초과할 수 없습니다.');
+            }
+            // 입력창 높이 자동 조절
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
 
+        // 에러 메시지 표시 함수
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            setTimeout(() => errorDiv.remove(), 3000);
+            document.querySelector('.message-container').appendChild(errorDiv);
+        }
+
+        // 채팅 내용을 텍스트 파일로 저장
         function saveChat() {
             const messages = document.querySelectorAll('.message, .bot-message-with-logo');
             let chatContent = "=== 상담 내용 ===\n\n";
-            
             messages.forEach(msg => {
                 const time = msg.querySelector('.message-time')?.textContent || '';
                 const content = msg.textContent.replace(time, '').trim();
                 const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
-                
                 chatContent += `${type} ${content}\n`;
                 if (time) chatContent += `(${time})\n`;
                 chatContent += "\n";
             });
-
             const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
             const filename = `상담내용_${date}.txt`;
-            
             const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            
             a.href = url;
             a.download = filename;
             a.style.display = 'none';
-            
             document.body.appendChild(a);
             a.click();
-            
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
         }
 
-        document.getElementById('codeInput').focus();
+        // 자동 저장 기능 (5분마다, localStorage에 저장)
+        function autoSaveChat() {
+            const messages = document.querySelectorAll('.message, .bot-message-with-logo');
+            const newMessages = Array.from(messages).map(msg => ({
+                content: msg.textContent,
+                time: new Date().toISOString(),
+                type: msg.classList.contains('user-message') ? 'user' : 'bot'
+            }));
+            localStorage.setItem('chatHistory', JSON.stringify(newMessages));
+        }
+        setInterval(autoSaveChat, 300000);
     </script>
 </body>
 </html>
