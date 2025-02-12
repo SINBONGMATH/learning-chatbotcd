@@ -320,7 +320,7 @@
                
                 const botMessage = document.createElement('div');
                 botMessage.className = 'bot-message-with-logo';
-                botMessage.innerHTML = message.replace(/\n/g, '<br>');
+                botMessage.innerHTML = message.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
                
                 const timeDiv = document.createElement('div');
                 timeDiv.className = 'message-time';
@@ -486,6 +486,22 @@
                     </div>
                 </div>
             `;
+        }
+
+        function sanitizeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function validatePhone(phone) {
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            const phoneRegex = /^01(?:1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
+            return phoneRegex.test(cleanPhone);
         }
     </script>
 </body>
