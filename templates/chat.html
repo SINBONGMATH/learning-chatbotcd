@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>강아 신봉캠퍼스 마스터케어👑    <title>강아 신봉캠퍼스 마스터케어👑</title>
+    <title>강아 신봉캠퍼스 마스터케어👑</title>
     <style>
         :root {
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -14,12 +14,10 @@
             --input-height: 60px;
         }
 
-
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
         }
-
 
         body {
             margin: 0;
@@ -32,11 +30,9 @@
             -webkit-font-smoothing: antialiased;
         }
 
-
         html {
             height: -webkit-fill-available;
         }
-
 
         .chat-container {
             height: 100vh;
@@ -48,7 +44,6 @@
             overflow: hidden;
         }
 
-
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -57,7 +52,6 @@
             scroll-behavior: smooth;
         }
 
-
         .logo-message {
             display: flex;
             align-items: flex-start;
@@ -65,7 +59,6 @@
             max-width: 100%;
             animation: fadeIn 0.3s ease;
         }
-
 
         .logo-container {
             width: 38px;
@@ -78,13 +71,11 @@
             box-shadow: var(--message-shadow);
         }
 
-
         .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
 
         .bot-message-with-logo {
             background-color: white;
@@ -97,13 +88,11 @@
             word-wrap: break-word;
         }
 
-
         .bot-message-with-logo a {
             color: var(--primary-color);
             text-decoration: underline;
             font-weight: 500;
         }
-
 
         .user-message {
             background-color: #FFE94A;
@@ -118,14 +107,12 @@
             animation: fadeIn 0.3s ease;
         }
 
-
         .message-time {
             font-size: 12px;
             color: #8FA3BF;
             margin-top: 6px;
             text-align: right;
         }
-
 
         .input-container {
             position: fixed;
@@ -141,7 +128,6 @@
             z-index: 1000;
         }
 
-
         .code-container, .message-container {
             display: flex;
             align-items: center;
@@ -151,11 +137,9 @@
             padding: 0 5px;
         }
 
-
         .message-container {
             display: none;
         }
-
 
         input {
             flex: 1;
@@ -169,14 +153,12 @@
             transition: all 0.2s ease;
         }
 
-
         input:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
             background-color: white;
         }
-
 
         button {
             padding: 0 24px;
@@ -193,11 +175,9 @@
             flex-shrink: 0;
         }
 
-
         button:active {
             transform: scale(0.95);
         }
-
 
         .save-chat-btn {
             position: fixed;
@@ -209,17 +189,14 @@
             z-index: 1000;
         }
 
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-
         .chat-messages::-webkit-scrollbar {
             display: none;
         }
-
 
         @media screen and (max-width: 768px) {
             input {
@@ -236,11 +213,29 @@
             }
         }
 
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+        }
 
         .typing-indicator .dot {
+            width: 6px;
+            height: 6px;
+            background: #90A4AE;
+            border-radius: 50%;
+            opacity: 0.5;
             animation: typing 1.4s infinite;
         }
 
+        .typing-indicator .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes typing {
             0%, 60%, 100% {
@@ -270,7 +265,6 @@
         <button class="save-chat-btn" onclick="saveChat()">대화 저장</button>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const messages = [
@@ -280,7 +274,8 @@
                 "📈 저희는 앞으로 더 다양한 데이터를 연결하여 시스템을 발전시켜 나갈 예정입니다.",
                 "🎯 시간이 지날수록 의미 있는 데이터가 쌓이면서, 더 정교한 학습계획 작성이 가능해질 것입니다.",
                 "🔮 또한 학습 진행 속도 예측의 정확도도 점차 높아질 것으로 기대됩니다.",
-                "개인코드번호를 입력해 주세요."            ];
+                "개인코드번호를 입력해 주세요."
+            ];
            
             messages.forEach((message, index) => {
                 setTimeout(() => {
@@ -288,7 +283,6 @@
                 }, index * 1000);
             });
         });
-
 
         function addMessage(message, isUser) {
             const chatMessages = document.getElementById('chatMessages');
@@ -338,6 +332,45 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const logoMessage = document.createElement('div');
+            logoMessage.className = 'logo-message';
+            logoMessage.id = 'typingIndicator';
+           
+            const logoContainer = document.createElement('div');
+            logoContainer.className = 'logo-container';
+            const logoImg = document.createElement('img');
+            logoImg.src = '/static/logo.PNG';
+            logoImg.alt = '학원 로고';
+            logoContainer.appendChild(logoImg);
+           
+            const botMessage = document.createElement('div');
+            botMessage.className = 'bot-message-with-logo';
+           
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            `;
+           
+            botMessage.appendChild(typingIndicator);
+            logoMessage.appendChild(logoContainer);
+            logoMessage.appendChild(botMessage);
+            chatMessages.appendChild(logoMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+           
+            return logoMessage;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
 
         function verifyCode() {
             const code = document.getElementById('codeInput').value;
@@ -349,7 +382,6 @@
                 alert('개인코드번호를 입력해주세요');
             }
         }
-
 
         async function sendMessage() {
             const codeInput = document.getElementById('codeInput');
@@ -365,8 +397,7 @@
             addMessage(message, true);
             messageInput.value = '';
            
-            // 수정된 임시 응답 메시지
-            addMessage("잠시만 기다려 주십시오. 학습이력을 확인 후 답변 드리도록 하겠습니다.", false);
+            const typingIndicator = showTypingIndicator();
            
             try {
                 const response = await fetch('/chat', {
@@ -380,15 +411,14 @@
                     })
                 });
 
+                hideTypingIndicator();
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
 
-
                 const data = await response.json();
                
-                // 봇 응답 표시
                 if (data.response) {
                     await sendSplitMessages(data.response);
                 } else {
@@ -396,78 +426,94 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
+                hideTypingIndicator();
                 addMessage('죄송합니다. 오류가 발생했습니다.', false);
             }
         }
 
-
         async function sendSplitMessages(responseText) {
-            // 문장 분리 (., !, ?로 구분)
-            const sentences = responseText.match(/[^.!?]+[.!?]+/g) || [responseText];
-
-            // 2개 문장씩 그룹화
-            const formattedSentences = [];
-            for (let i = 0; i < sentences.length; i += 2) {
-                if (i + 1 < sentences.length) {
-                    formattedSentences.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
-                } else {
-                    formattedSentences.push(sentences[i].trim());
+            // Split messages but keep the last part (with contact info) as one piece
+            const parts = responseText.split('⭐');
+            let messages = [];
+            
+            if (parts.length > 1) {
+                // Process all parts except the last one normally
+                const mainContent = parts[0];
+                const sentences = mainContent.match(/[^.!?]+[.!?]+/g) || [mainContent];
+                
+                // Group sentences into pairs
+                for (let i = 0; i < sentences.length; i += 2) {
+                    if (i + 1 < sentences.length) {
+                        messages.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
+                    } else {
+                        messages.push(sentences[i].trim());
+                    }
                 }
-            }
-
-            // 2초 간격으로 순차 전송
-            for (const message of formattedSentences) {
-                if (message.trim()) {
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    addMessage(message.trim(), false);
-                }
-            }
-
-            // 마지막 메시지 처리
-            const lastIndex = formattedSentences.length - 1;
-            if (formattedSentences[lastIndex].includes('⭐')) {
-                formattedSentences[lastIndex] = formattedSentences[lastIndex]
+                
+                // Add the last part (with ⭐) as a single message with formatted links
+                let lastPart = '⭐' + parts[1];
+                lastPart = lastPart
                     .replace(
                         'https://tally.so/r/3qoLp9',
                         '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>'
                     )
                     .replace(
-                        /(\d{3})-?(\d{4})-?(\d{4})/g,
-                        '<a href="tel:$1$2$3">$1-$2-$3</a>'
+                        /이후민 선생님:\s*(\d{3})-?(\d{4})-?(\d{4})/g,
+                        '이후민 선생님: <a href="tel:$1$2$3">$1-$2-$3</a>'
+                    )
+                    .replace(
+                        /김미리 선생님:\s*(\d{3})-?(\d{4})-?(\d{4})/g,
+                        '김미리 선생님: <a href="tel:$1$2$3">$1-$2-$3</a>'
                     );
+                messages.push(lastPart);
+            } else {
+                // If there's no star symbol, process the entire message normally
+                const sentences = responseText.match(/[^.!?]+[.!?]+/g) || [responseText];
+                for (let i = 0; i < sentences.length; i += 2) {
+                    if (i + 1 < sentences.length) {
+                        messages.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
+                    } else {
+                        messages.push(sentences[i].trim());
+                    }
+                }
+            }
+
+            // Send messages with delay
+            for (const message of messages) {
+                if (message.trim()) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    addMessage(message.trim(), false);
+                }
             }
         }
-
 
         function saveChat() {
             const messages = document.querySelectorAll('.user-message, .logo-message');
             let chatContent = "=== 상담 내용 ===\n\n";
-           
+            
             messages.forEach(msg => {
                 const time = msg.querySelector('.message-time')?.textContent || '';
                 const content = msg.textContent.replace(time, '').trim();
                 const type = msg.classList.contains('user-message') ? '[학생]' : '[상담사]';
-               
+                
                 chatContent += `${type} ${content}\n`;
                 if (time) chatContent += `(${time})\n`;
                 chatContent += "\n";
             });
 
-
             const date = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').trim();
             const filename = `상담내용_${date}.txt`;
-           
+            
             const blob = new Blob([chatContent], { type: 'text/plain;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-           
+            
             a.href = url;
             a.download = filename;
             a.click();
-           
+            
             window.URL.revokeObjectURL(url);
         }
-
 
         // Enter 키 이벤트 처리
         document.getElementById('codeInput').addEventListener('keypress', function(e) {
@@ -476,30 +522,12 @@
             }
         });
 
-
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
-
-
-        function showTypingIndicator() {
-            // ... 로고와 함께 표시되는 타이핑 인디케이터
-            typingIndicator.innerHTML = `
-                <div class="logo-container">
-                    <img src="/static/logo.PNG" alt="학원 로고">
-                </div>
-                <div class="bot-message-with-logo">
-                    <div class="typing-indicator">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-            `;
-        }
     </script>
 </body>
 </html>
