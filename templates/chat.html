@@ -463,6 +463,8 @@
                    addMessage(messageElement.innerHTML, false);
                }
            }
+
+           formattedSentences.push(lastMessage);
         }
 
 
@@ -543,6 +545,12 @@
             const phoneRegex = /^01(?:1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
             return phoneRegex.test(cleanPhone);
         }
+
+        const lastMessage = '⭐ 기타 문의사항이나 상담은 ' + 
+                           '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>' + 
+                           ' 로 신청해주세요. ' + 
+                           '이후민 선생님: <a href="tel:01029635207">010-2963-5207</a> ' + 
+                           '김미리 선생님: <a href="tel:01073523314">010-7352-3314</a>';
     </script>
 </body>
 </html>
