@@ -437,8 +437,8 @@
            // 문장 단위로 분리 (URL이나 전화번호가 포함된 문장은 분리하지 않음)
            const parts = formattedText.split('⭐');
            if (parts[0]) {
-               const regularSentences = parts[0].match(/[^.!?]+[.!?]+/g) || [];
-               for (let i = 0; i < regularSentences.length; i += 2) {
+               const sentences = parts[0].match(/[^.!?]+[.!?]+/g) || [parts[0]];
+               for (let i = 0; i < sentences.length; i += 2) {
                    // ... 2개씩 그룹화
                }
            }
@@ -447,11 +447,11 @@
 
            // 2개 문장씩 그룹화
            const formattedSentences = [];
-           for (let i = 0; i < regularSentences.length; i += 2) {
-               if (i + 1 < regularSentences.length) {
-                   formattedSentences.push(regularSentences[i].trim() + ' ' + regularSentences[i + 1].trim());
+           for (let i = 0; i < sentences.length; i += 2) {
+               if (i + 1 < sentences.length) {
+                   formattedSentences.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
                } else {
-                   formattedSentences.push(regularSentences[i].trim());
+                   formattedSentences.push(sentences[i].trim());
                }
            }
 
@@ -470,7 +470,7 @@
                }
            }
 
-           if (parts[1]) {
+           if (responseText.includes('⭐')) {
                const lastMessage = '⭐ 기타 문의사항이나 상담은 <a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a> 로 신청해주세요. ' +
                                  '이후민 선생님: <a href="tel:01029635207">010-2963-5207</a> ' +
                                  '김미리 선생님: <a href="tel:01073523314">010-7352-3314</a>';
