@@ -272,6 +272,18 @@
 
 
     <script>
+        let csrfToken = null;
+
+        async function fetchCsrfToken() {
+            try {
+                const response = await fetch('/csrf-token');
+                const data = await response.json();
+                csrfToken = data.csrf_token;
+            } catch (error) {
+                console.error('CSRF 토큰 가져오기 실패:', error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const messages = [
                 "👋 안녕하세요! 강의하는 아이들 수학학원 수지신봉캠퍼스입니다.",
@@ -373,12 +385,19 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
                     },
                     body: JSON.stringify({
                         phone: code,
                         message: message
                     })
                 });
+
+
+                if (response.status === 429) {  // Rate Limit 초과
+                    addMessage("메시지 전송 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.", false);
+                    return;
+                }
 
 
                 if (!response.ok) {
