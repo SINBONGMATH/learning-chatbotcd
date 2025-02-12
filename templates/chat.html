@@ -429,20 +429,29 @@
                )
                .replace(
                    /(\d{3})-?(\d{4})-?(\d{4})/g, 
-                   '<a href="tel:$1$2$3">$1-$2-$3</a>'
+                   function(match, p1, p2, p3) {
+                       return `<a href="tel:${p1}${p2}${p3}">${p1}-${p2}-${p3}</a>`;
+                   }
                );
 
            // 문장 단위로 분리 (URL이나 전화번호가 포함된 문장은 분리하지 않음)
-           const sentences = formattedText.match(/[^.!?]+[.!?]+|\⭐[^]+$/g) || [formattedText];
+           const parts = formattedText.split('⭐');
+           const regularSentences = parts[0].match(/[^.!?]+[.!?]+/g) || [];
+           const lastPart = parts[1] ? '⭐' + parts[1] : '';
 
            // 2개 문장씩 그룹화
            const formattedSentences = [];
-           for (let i = 0; i < sentences.length; i += 2) {
-               if (i + 1 < sentences.length) {
-                   formattedSentences.push(sentences[i].trim() + ' ' + sentences[i + 1].trim());
+           for (let i = 0; i < regularSentences.length; i += 2) {
+               if (i + 1 < regularSentences.length) {
+                   formattedSentences.push(regularSentences[i].trim() + ' ' + regularSentences[i + 1].trim());
                } else {
-                   formattedSentences.push(sentences[i].trim());
+                   formattedSentences.push(regularSentences[i].trim());
                }
+           }
+
+           // 마지막 안내문장 추가
+           if (lastPart) {
+               formattedSentences.push(lastPart.trim());
            }
 
            // 2.5초 간격으로 순차 전송
