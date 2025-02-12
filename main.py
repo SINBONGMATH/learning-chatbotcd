@@ -448,7 +448,6 @@ async def chat_endpoint(request: Request):
     - "해주길 바랍니다" 대신 "하면 좋을 것 같아요" 사용
     - 퍼센트는 소수점 없이 자연수로만 표시 (예: 25.0% → 25%)
 
-13. 마지막에는 반드시 "⭐ 기타 문의사항이나 상담은 문자 또는 https://tally.so/r/3qoLp9 로 신청해주세요." 로 끝내기
 """
             messages=[
                 {
