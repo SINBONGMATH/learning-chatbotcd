@@ -2,13 +2,19 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 from pyairtable import Api
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import anthropic  # Anthropic Claude 사용
 import re
 import logging
+from fastapi_limiter import FastAPILimiter
+from starlette.middleware.csrf import CSRFMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import secrets
 
 load_dotenv()
 
