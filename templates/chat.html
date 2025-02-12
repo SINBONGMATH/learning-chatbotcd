@@ -422,6 +422,20 @@
                     addMessage(message.trim(), false);
                 }
             }
+
+            // 마지막 메시지 처리
+            const lastIndex = formattedSentences.length - 1;
+            if (formattedSentences[lastIndex].includes('⭐')) {
+                formattedSentences[lastIndex] = formattedSentences[lastIndex]
+                    .replace(
+                        'https://tally.so/r/3qoLp9',
+                        '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>'
+                    )
+                    .replace(
+                        /(\d{3})-?(\d{4})-?(\d{4})/g,
+                        '<a href="tel:$1$2$3">$1-$2-$3</a>'
+                    );
+            }
         }
 
 
