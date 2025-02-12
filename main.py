@@ -2,11 +2,13 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 from pyairtable import Api
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import anthropic  # Anthropic Claude 사용
+import re
+import logging
 
 load_dotenv()
 
@@ -206,9 +208,10 @@ async def consultation_endpoint(request: Request):
         return JSONResponse(content={"response": consultation})
     
     except Exception as e:
+        logger.error(f"Consultation endpoint error: {str(e)}")
         return JSONResponse(
             status_code=500,
-            content={"error": f"오류가 발생했습니다: {str(e)}"}
+            content={"error": "내부 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."}
         )
 
 @app.get("/chat")
@@ -420,7 +423,8 @@ async def chat_endpoint(request: Request):
 
 9. 격려나 약속을 할 때는 "최선을 다해 계획을 맞추도록 학원에서 신경써보겠습니다." 라는 표현 사용
 
-10. 마지막에는 반드시 "⭐ 기타 문의사항이나 상담은 https://tally.so/r/3qoLp9 로 신청해주세요. 이후민 선생님: 010-2963-5207 김미리 선생님: 010-7352-3314" 로 끝내기
+10. 마지막에는 반드시 "⭐ 기타 문의사항이나 상담은 문자 또는 https://tally.so/r/3qoLp9 로 신청해주세요. 이후민 선생님: 010-2963-5207 김미리 선생님: 010-7352-3314" 로 끝내기
+
 11. 진도율에 따른 학습 위치 설명:
     📊 진도율 안내:
     - 0~10%: "이제 교재를 시작하는 단계입니다"
@@ -431,11 +435,15 @@ async def chat_endpoint(request: Request):
     - 91~99%: "교재의 마무리 단계에 있습니다"
     - 100%: "교재의 모든 과정을 완료했습니다"
 
+답변은 이모지를 적절히 사용하여 친근하고 이해하기 쉽게 작성해주세요.
+
 12. 답변 시 다음 규칙을 반드시 지키기:
     - "학습강도" 대신 "학습 난이도" 표현 사용
-    - "~하길 바랍니다" 대신 "~하면 좋을 것 같아요" 사용
+    - "해주길 바랍니다" 대신 "하면 좋을 것 같아요" 사용
     - 퍼센트는 소수점 없이 자연수로만 표시 (예: 25.0% → 25%)
-답변은 이모지를 적절히 사용하여 친근하고 이해하기 쉽게 작성해주세요.""",
+
+13. 마지막에는 반드시 "⭐ 기타 문의사항이나 상담은 문자 또는 https://tally.so/r/3qoLp9 로 신청해주세요." 로 끝내기
+"""
             messages=[
                 {
                     "role": "user",
@@ -448,8 +456,11 @@ async def chat_endpoint(request: Request):
         return {"response": chatbot_response}
         
     except Exception as e:
-        print(f"Error occurred: {str(e)}")  # 디버깅용
-        return {"response": f"오류가 발생했습니다: {str(e)}"}
+        logger.error(f"Chat endpoint error: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": "내부 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."}
+        )
 
 def calculate_future_completion_dates(current_book, completed_books):
     try:
@@ -487,7 +498,13 @@ def calculate_future_completion_dates(current_book, completed_books):
         print(f"Error in calculate_future_completion_dates: {str(e)}")
         return None
 
+def validate_message(message: str) -> str:
+    if not message or not message.strip():
+        raise HTTPException(status_code=400, detail="메시지 내용이 비어있습니다.")
+    if len(message) > 500:
+        raise HTTPException(status_code=400, detail="메시지는 500자를 초과할 수 없습니다.")
+    return message.strip()
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
