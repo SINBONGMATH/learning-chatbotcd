@@ -399,23 +399,28 @@
            
             const typingIndicator = showTypingIndicator();
            
-            try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        phone: code,
-                        message: message
-                    })
-                });
+        try {
+    const response = await fetch('/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            phone: code,
+            message: message
+        })
+    });
 
-                hideTypingIndicator();
+    hideTypingIndicator();
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+    if (!response.ok) {
+        if (response.status === 529) {
+            addMessage('😅 죄송합니다. 현재 잠시 요청이 많아 응답이 지연되고 있습니다. 잠시 후 다시 시도해 주시기 바랍니다.', false);
+        } else {
+            addMessage('죄송합니다. 오류가 발생했습니다.', false);
+        }
+        return;
+    }
 
                 const data = await response.json();
                
