@@ -436,7 +436,13 @@
 
            // 문장 단위로 분리 (URL이나 전화번호가 포함된 문장은 분리하지 않음)
            const parts = formattedText.split('⭐');
-           const regularSentences = parts[0].match(/[^.!?]+[.!?]+/g) || [];
+           if (parts[0]) {
+               const regularSentences = parts[0].match(/[^.!?]+[.!?]+/g) || [];
+               for (let i = 0; i < regularSentences.length; i += 2) {
+                   // ... 2개씩 그룹화
+               }
+           }
+
            const lastPart = parts[1] ? '⭐' + parts[1] : '';
 
            // 2개 문장씩 그룹화
@@ -464,7 +470,12 @@
                }
            }
 
-           formattedSentences.push(lastMessage);
+           if (parts[1]) {
+               const lastMessage = '⭐ 기타 문의사항이나 상담은 <a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a> 로 신청해주세요. ' +
+                                 '이후민 선생님: <a href="tel:01029635207">010-2963-5207</a> ' +
+                                 '김미리 선생님: <a href="tel:01073523314">010-7352-3314</a>';
+               formattedSentences.push(lastMessage);
+           }
         }
 
 
@@ -546,11 +557,9 @@
             return phoneRegex.test(cleanPhone);
         }
 
-        const lastMessage = '⭐ 기타 문의사항이나 상담은 ' + 
-                           '<a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a>' + 
-                           ' 로 신청해주세요. ' + 
-                           '이후민 선생님: <a href="tel:01029635207">010-2963-5207</a> ' + 
-                           '김미리 선생님: <a href="tel:01073523314">010-7352-3314</a>';
+        const lastMessage = '⭐ 기타 문의사항이나 상담은 <a href="https://tally.so/r/3qoLp9" target="_blank">https://tally.so/r/3qoLp9</a> 로 신청해주세요. ' +
+                          '이후민 선생님: <a href="tel:01029635207">010-2963-5207</a> ' +
+                          '김미리 선생님: <a href="tel:01073523314">010-7352-3314</a>';
     </script>
 </body>
 </html>
